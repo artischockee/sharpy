@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 
 namespace LabWork03
@@ -13,60 +14,43 @@ namespace LabWork03
             return bufNumbers;
         }
 
-        static void WriteNumber(FileStream destination, int number)
-        {
-            using (var file = new StreamWriter(destination))
-            {
-                file.WriteLine(number);
-            }            
-        }
-
-        static int ReadNumber(FileStream source)
-        {
-            int sourceNumber;
-            using (var file = new StreamReader(source))
-            {
-                string buffer = file.ReadLine();
-                Int32.TryParse(buffer, out sourceNumber);
-            }
-            return sourceNumber;
-        }
-
-        static void Operate(FileStream input, FileStream aux, FileStream output)
+        static void Operate(FileStream input, FileStream output)
         {
             string[] buffer;
-            using (var init = new StreamReader(input))
-            {
+            using (var init = new StreamReader(input)) {
                 buffer = GetSeparatedNumbers(init);
             }
 
-            bool switcher = false;
+            List<int> aux = new List<int>();
+            bool signSwitcher = false;
+
             using (var dest = new StreamWriter(output))
             {
                 foreach (var num in buffer) {
-                    int temp;
-                    Int32.TryParse(num, out temp);
+                    int parsedNum;
+                    Int32.TryParse(num, out parsedNum);
 
-                    if (temp > 0) {
-                        if (switcher) {
-                            WriteNumber(aux, temp);
-                        } else {
-                            dest.Write(temp + ' ');
-                            switcher = !switcher;
+                    if (parsedNum > 0) {
+                        if (signSwitcher)
+                            aux.Add(parsedNum);
+                        else {
+                            dest.Write(parsedNum + " ");
+                            signSwitcher = !signSwitcher;
                         }
                     } else {
-                        if (switcher) {
-                            dest.Write(temp + ' ');
-                            switcher = !switcher;
-                        } else {
-                            WriteNumber(aux, temp);
-                        }
+                        if (signSwitcher) {
+                            dest.Write(parsedNum + " ");
+                            signSwitcher = !signSwitcher;
+                        } else
+                            aux.Add(parsedNum);
                     }
 
-                    if (switcher && aux.Length > 0) {
-                        int fromAux = ReadNumber(aux);
-                        dest.Write(fromAux + ' ');
-                        switcher = !switcher;
+                    if (aux.Count > 0 &&
+                        ((signSwitcher && aux[0] < 0) ||
+                         (!signSwitcher && aux[0] > 0)))
+                    {
+                        dest.Write(aux[0] + " "); aux.RemoveAt(0);
+                        signSwitcher = !signSwitcher;
                     }
                 }
             }
@@ -75,14 +59,17 @@ namespace LabWork03
         static void Main(string[] args)
         {
             const string file_f = "f-task-4";
-            const string file_h = "h-task-4";
             const string file_g = "g-task-4";
 
             FileStream initFile = new FileStream(file_f, FileMode.Open, FileAccess.Read);
-            FileStream auxFile = new FileStream(file_h, FileMode.Create, FileAccess.ReadWrite);
             FileStream destFile = new FileStream(file_g, FileMode.Create, FileAccess.Write);
 
-            Operate(initFile, auxFile, destFile);
+            Operate(initFile, destFile);
+
+            Process.Start("/bin/bash",
+            "-c \"echo \'File F:\' && cat f-task-4 && echo\"");
+            Process.Start("/bin/bash",
+            "-c \"echo \'File G:\' && cat g-task-4 && echo\"");
         }
     }
 }
