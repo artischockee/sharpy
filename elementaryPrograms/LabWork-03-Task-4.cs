@@ -14,35 +14,44 @@ namespace LabWork03
             return bufNumbers;
         }
 
+        static List<int> ParseIntsFromString(ref string[] init)
+        {
+            var auxiliary = new List<int>();
+            foreach (var num in init) {
+                int parsedNum;
+                Int32.TryParse(num, out parsedNum);
+                auxiliary.Add(parsedNum);
+            }
+            return auxiliary;
+        }
+
         static void Operate(FileStream input, FileStream output)
         {
-            string[] buffer;
+            var numArray = new List<int>();
             using (var init = new StreamReader(input)) {
-                buffer = GetSeparatedNumbers(init);
+                string[] buffer = GetSeparatedNumbers(init);
+                numArray = ParseIntsFromString(ref buffer);
             }
 
-            List<int> aux = new List<int>();
+            var aux = new List<int>();
             bool signSwitcher = false;
 
             using (var dest = new StreamWriter(output))
             {
-                foreach (var num in buffer) {
-                    int parsedNum;
-                    Int32.TryParse(num, out parsedNum);
-
-                    if (parsedNum > 0) {
+                foreach (var num in numArray) {
+                    if (num > 0) {
                         if (signSwitcher)
-                            aux.Add(parsedNum);
+                            aux.Add(num);
                         else {
-                            dest.Write(parsedNum + " ");
+                            dest.Write(num + " ");
                             signSwitcher = !signSwitcher;
                         }
                     } else {
                         if (signSwitcher) {
-                            dest.Write(parsedNum + " ");
+                            dest.Write(num + " ");
                             signSwitcher = !signSwitcher;
                         } else
-                            aux.Add(parsedNum);
+                            aux.Add(num);
                     }
 
                     if (aux.Count > 0 &&
