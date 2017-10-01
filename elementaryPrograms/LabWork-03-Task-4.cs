@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace LabWork03
@@ -74,11 +73,6 @@ namespace LabWork03
             FileStream destFile = new FileStream(file_g, FileMode.Create, FileAccess.Write);
 
             Operate(initFile, destFile);
-
-            Process.Start("/bin/bash",
-            "-c \"echo \'File F:\' && cat f-task-4 && echo\"");
-            Process.Start("/bin/bash",
-            "-c \"echo \'File G:\' && cat g-task-4 && echo\"");
         }
     }
 }
