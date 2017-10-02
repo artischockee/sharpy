@@ -88,6 +88,7 @@ namespace LabWork04
             return strTime;
         }
 
+        // **Сделать красиво и адекватно
         private static int GenAnyNumber(Random rand)
         {
             int chance = rand.Next(100);
@@ -105,9 +106,7 @@ namespace LabWork04
 
     public class Task1
     {
-        /*
-           Необходимо оптимизировать функции поиска, исключив повторение кода
-        */
+        // **Необходимо оптимизировать функции поиска, исключив повторение кода
 
         static void SearchByDestPointAndCmnSeats(ref List<Train> schedule)
         {
@@ -186,8 +185,8 @@ namespace LabWork04
 
             DisplayTrainSchedule(ref schedule);
 
-            // SearchByDestPoint(ref schedule);
-            // SearchByDestPointAndDepTime(ref schedule);
+            SearchByDestPoint(ref schedule);
+            SearchByDestPointAndDepTime(ref schedule);
             SearchByDestPointAndCmnSeats(ref schedule);
         }
     }
