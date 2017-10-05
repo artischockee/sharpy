@@ -15,10 +15,10 @@ namespace LabWork04
 
         internal static string GenDestPoint()
         {
-            // string[] destPoints = { "Kaliningrad", "Berlin", "Cologne", "Moscow", "Paris", "Vienna", "Hamburg", "V. Novgorod", "N. Novgorod", "Rostov-Na-Donu", "Luxembourg", "Los Angeles", "St. Petersburg", "Lissabon", "Torjok", "Tomsk", "Novosibirsk", "Vladivostok", "Jakarta", "Dubai", "Kiev", "Odessa", "Donetsk", "Krivosheino", "Irkutsk", "Wroclaw", "Belfast", "Madrid", "Barcelona", "Mecca", "Rome", "Florence", "Yekaterinburg", "Tokyo", "Hiroshima", "New Orlean", "Toronto", "Washington", "Buenos Aires", "Bogota", "Brasilia", "Rio de Janeiro", "Ottawa", "Tallahassee", "Cupertino", "San Francisco", "New York City", "Tallinn" };
+            // string[] destPoints = { "Kaliningrad", "Berlin", "Cologne", "Moscow", "Paris", "Vienna", "Hamburg", "V. Novgorod", "N. Novgorod", "Rostov-on-Don", "Luxembourg", "Los Angeles", "St. Petersburg", "Lissabon", "Torjok", "Tomsk", "Novosibirsk", "Vladivostok", "Jakarta", "Dubai", "Kiev", "Odessa", "Donetsk", "Krivosheino", "Irkutsk", "Wroclaw", "Belfast", "Madrid", "Barcelona", "Mecca", "Rome", "Florence", "Yekaterinburg", "Tokyo", "Hiroshima", "New Orlean", "Toronto", "Washington", "Buenos Aires", "Bogota", "Brasilia", "Rio de Janeiro", "Ottawa", "Tallahassee", "Cupertino", "San Francisco", "New York City", "Tallinn" };
 
             // Меньше городов для наглядности:
-            string[] destPoints = { "Kaliningrad", "Berlin", "Cologne", "Moscow", "Paris", "Vienna", "Hamburg", "V. Novgorod", "N. Novgorod", "Rostov-Na-Donu", "Luxembourg" };
+            string[] destPoints = { "Kaliningrad", "Berlin", "Cologne", "Moscow", "Paris", "Vienna", "Hamburg", "Tomsk", "Odessa", "Rostov-on-Don", "Rome" };
 
             return destPoints[rand.Next(destPoints.Length)];
         }
@@ -30,9 +30,8 @@ namespace LabWork04
             time[1] = rand.Next(60);
 
             string[] strTime = new string[2];
-            for (int i = 0; i < strTime.Length; ++i) {
+            for (int i = 0; i < strTime.Length; ++i)
                 strTime[i] = Task1.TimeToString(time[i]);
-            }
 
             return strTime;
         }

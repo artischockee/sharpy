@@ -72,13 +72,16 @@ namespace LabWork04
             Console.WriteLine("--------------------------------------------------------------------------------");
         }
 
-        static void CreateTrainSchedule(ref List<Train> schedule, int trainsAmount)
+        static List<Train> CreateTrainSchedule(int trainsAmount)
         {
+            List<Train> newSchedule = new List<Train>();
             while (trainsAmount > 0) {
                 var train = new Train();
-                schedule.Add(train);
+                newSchedule.Add(train);
                 --trainsAmount;
             }
+
+            return newSchedule;
         }
 
         /// <summary>
@@ -89,8 +92,9 @@ namespace LabWork04
         {
             const int trainsAmount = 24;
 
+            // ***Адекватное ли решение?
             List<Train> schedule = new List<Train>();
-            CreateTrainSchedule(ref schedule, trainsAmount);
+            schedule = CreateTrainSchedule(trainsAmount);
 
             DepartureTimeComparer dtc = new DepartureTimeComparer();
             schedule.Sort(dtc);
