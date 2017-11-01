@@ -56,7 +56,7 @@ namespace LW06T1
         {
             // smth here..
         }
-    }
+    } // class Pet
 
     public class Cat : Pet
     {
@@ -94,7 +94,7 @@ namespace LW06T1
                 result = "Oh my god, this is incredible!";
             Console.WriteLine("{0} {1} has catched {2} {3} in the flat.", result, Name, miceCount, miceNumeral);
         }
-    }
+    } // public class Cat : Pet
 
     public class Dog : Pet
     {
@@ -112,20 +112,20 @@ namespace LW06T1
         public void Guard()
         {
             Console.WriteLine(Name + " is guarding the perimeter..");
-            string[] famousGuests = { "Steve Jobs", "Mark Zuckerberg", "Elon Musk", "Bill Gates", "Ray Kurzweil", "John Lasseter", "Jony Ive" };
+            string[] famousGuests = { "Steve Jobs", "Mark Zuckerberg", "Elon Musk", "Bill Gates", "Ray Kurzweil", "John Lasseter", "Jony Ive", "Alexander Shelupanov" };
 
             string guest = famousGuests[rand.Next(famousGuests.Length)];
             if (guest == "Bill Gates")
-                FrightenTheGuest();
+                DriveAwayTheGuest(guest);
             else
                 Console.WriteLine(Name + " has met no threat. The house was visited by {0}.", guest);
         }
 
-        private void FrightenTheGuest()
+        private void DriveAwayTheGuest(string victim)
         {
-            Console.WriteLine("**Growl sounds** - looks like Bill Gates was trying to visit our house.");
+            Console.WriteLine("**Growl sounds** - looks like {0} was trying to visit our house.", victim);
         }
-    }
+    } // public class Dog : Pet
 
     public class Parrot : Pet
     {
@@ -152,5 +152,5 @@ namespace LW06T1
 
             Console.WriteLine("Hello, Mr. or Mrs.! My name is {0}, I am a parrot! I am a {1}, also my weight is {2} kg and my height is {3} cm!", Name, sex, Weight, Height);
         }
-    }
+    } // public class Parrot : Pet
 }

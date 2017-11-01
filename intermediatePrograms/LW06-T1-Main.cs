@@ -32,6 +32,8 @@ namespace LW06T1
                 pet.Action();
                 Console.WriteLine();
             }
+
+            // Console.ReadLine(); // in case of running on Windows
         }
     }
 }
