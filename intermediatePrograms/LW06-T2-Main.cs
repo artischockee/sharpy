@@ -21,6 +21,10 @@ namespace LW06T2
 
                 var DM1 = new DepartmentMember("Paula", 32, "Adobe", "PR");
                 DM1.Show();
+                Console.WriteLine();
+
+                var DH1 = new DepartmentHead("Lawrence", 45, "Tesla Motors", "Engineering", 6, 420);
+                DH1.Show();
             }
             catch(AgeException e) {
                 Console.WriteLine(e.Message);
