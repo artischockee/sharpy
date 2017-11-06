@@ -9,21 +9,29 @@ namespace LW07T1
         /// </summary>
         [STAThread]
 
+        public static void ArrayTesting()
+        {
+            var Afirst = new Array<int>();
+            Afirst.Add(1,2,3,4,5,6,7,8,9,10);
+            Afirst.Display();
+
+            var Asecond = new Array<int>();
+            Asecond.Add(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
+            Asecond.Display();
+
+            // should test some implemented methods..
+        }
+
+        public static void StackTesting()
+        {
+            // ...
+        }
+
         public static void Main(string[] args)
         {
             try {
-                var test = new Array<int>();
-                for (int i = 0; i < 10; ++i)
-                    test.Add(i + 1);
-                Console.WriteLine("Test 1");
-                test.Display();
-
-                var test2 = new Array<int>();
-                for (int i = 15; i >= 0; --i)
-                    test2.Add(i + 1);
-                Console.WriteLine("Test 2");
-                test2.Display();
-            
+                // ArrayTesting();
+                StackTesting();
             }
             catch (Exception e) {
                 Console.WriteLine(e.Message);
