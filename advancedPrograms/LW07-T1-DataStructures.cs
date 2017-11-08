@@ -25,6 +25,14 @@ namespace LW07T1
                 this.list.Add(obj);
         }
 
+        public DataStructure(List<T> list)
+        {
+            if (list == null)
+                throw new ArgumentNullException();
+
+            this.list = new List<T>(list);
+        }
+
         public int Length
         {
             get { return list.Count; }
@@ -48,6 +56,7 @@ namespace LW07T1
             Console.WriteLine();
         }
 
+        // this method implements adding elements in Array, Stack and Queue;
         public virtual void Add(params T[] list)
         {
             for (int i = 0; i < list.Length; ++i)
@@ -60,6 +69,7 @@ namespace LW07T1
         public Array() : base() {}
         public Array(int capacity) : base(capacity) {}
         public Array(T obj, int length) : base(obj, length) {}
+        public Array(List<T> list) : base(list) {}
 
         public override void Display()
         {
@@ -67,9 +77,14 @@ namespace LW07T1
             base.Display();
         }
 
-        public void Clear(int index, int length)
+        public static void Clear(
+            Array<T> array, int index, int length
+        )
         {
-            int listSize = list.Count;
+            if (array == null)
+                throw new ArgumentNullException();
+
+            int listSize = array.list.Count;
             int clBound = index + length; // i.e. clearing bound (upper)
 
             if (
@@ -78,7 +93,7 @@ namespace LW07T1
             ) throw new IndexOutOfRangeException();
             else
                 for (int i = index; i < clBound; ++i)
-                    list[i] = default(T);
+                    array.list[i] = default(T);
         }
 
         public static void Copy(Array<T> src, Array<T> dest, int length)
@@ -135,6 +150,34 @@ namespace LW07T1
             for (int i = 0, j = index; i < srcLen; ++i, ++j)
                 destination[j] = this[i];
         }
+
+        public static T Find(
+            Array<T> array, Predicate<T> match
+        )
+        {
+            if (array == null || match == null)
+                throw new ArgumentNullException();
+            else
+                return array.list.Find(match);
+        }
+
+        public static Array<T> FindAll(
+            Array<T> array, Predicate<T> match
+        )
+        {
+            if (array == null || match == null)
+                throw new ArgumentNullException();
+
+            var result = new Array<T>(
+                array.list.FindAll(match)
+            );
+            return result;
+        }
+
+        public static void Sort(Array<T> array)
+        {
+            array.list.Sort();
+        }
     } // public class Array<T> : DataStructure<T>
 
     public class Stack<T> : DataStructure<T>
@@ -158,7 +201,63 @@ namespace LW07T1
             list.Clear();
         }
 
+        public bool Contains(T obj)
+        {
+            for (int i = (list.Count - 1); i >= 0; --i)
+                if (list[i].Equals(obj))
+                    return true;
+            return false;
+        }
 
+        public T Peek()
+        {
+            int lastIndex = list.Count - 1;
 
+            if (lastIndex == -1)
+                throw new InvalidOperationException();
+            else
+                return (list[lastIndex]);
+        }
+
+        public T Pop()
+        {
+            int lastIndex = list.Count - 1;
+
+            if (lastIndex == -1)
+                throw new InvalidOperationException();
+
+            T upperElement = list[lastIndex];
+            list.RemoveAt(lastIndex);
+            return upperElement;
+        }
+
+        public void Push(params T[] list)
+        {
+            base.Add(list);
+        }
     } // public class Stack<T> : DataStructure<T>
+
+    public class Queue<T> : DataStructure<T>
+    {
+        public Queue() : base() {}
+        public Queue(int capacity) : base(capacity) {}
+
+        public int Count
+        {
+            get { return base.Length; }
+        }
+
+        public override void Display()
+        {
+            Console.Write("Queue: ");
+            base.Display();
+        }
+
+        public void Clear()
+        {
+            list.Clear();
+        }
+
+
+    } // public class Queue<T> : DataStructure<T>
 } // namespace LW07T1

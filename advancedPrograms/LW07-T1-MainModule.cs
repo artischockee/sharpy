@@ -18,20 +18,23 @@ namespace LW07T1
             var Asecond = new Array<int>();
             Asecond.Add(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
             Asecond.Display();
-
+            
             // should test some implemented methods..
         }
 
         public static void StackTesting()
         {
-            // ...
+            var Sfirst = new Stack<int>();
+            Sfirst.Push(17, 14, 32, 55, 1, 2, 3, 10, 16);
+            Sfirst.Display();
         }
 
         public static void Main(string[] args)
         {
             try {
-                // ArrayTesting();
-                StackTesting();
+                ArrayTesting();
+                // StackTesting();
+                // QueueTesting();
             }
             catch (Exception e) {
                 Console.WriteLine(e.Message);
