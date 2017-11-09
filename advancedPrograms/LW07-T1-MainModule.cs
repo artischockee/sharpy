@@ -11,15 +11,13 @@ namespace LW07T1
 
         public static void ArrayTesting()
         {
-            var Afirst = new Array<int>();
-            Afirst.Add(1,2,3,4,5,6,7,8,9,10);
-            Afirst.Display();
+            var first = new Array<int>();
+            first.Add(1,2,3,4,5,6,7,8,9,10);
+            first.Display();
 
-            var Asecond = new Array<int>();
-            Asecond.Add(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
-            Asecond.Display();
-            
-            // should test some implemented methods..
+            var second = new Array<int>();
+            second.Add(15,14,13,12,11,10,9,8,7,6,5,4,3,2,1);
+            second.Display();
         }
 
         public static void StackTesting()
@@ -27,6 +25,11 @@ namespace LW07T1
             var Sfirst = new Stack<int>();
             Sfirst.Push(17, 14, 32, 55, 1, 2, 3, 10, 16);
             Sfirst.Display();
+        }
+
+        public static void QueueTesting()
+        {
+            
         }
 
         public static void Main(string[] args)
