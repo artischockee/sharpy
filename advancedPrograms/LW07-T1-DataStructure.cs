@@ -9,29 +9,41 @@ namespace LW07T1
         // List presents a way to implement classes, such as Array, Stack and Queue
         protected List<T> list;
 
-        public DataStructure()
+        protected DataStructure()
         {
             this.list = new List<T>();
         }
 
-        public DataStructure(int capacity)
+        protected DataStructure(int capacity)
         {
-            this.list = new List<T>(capacity);
+            if (capacity < 0)
+                throw new ArgumentOutOfRangeException();
+            else
+                this.list = new List<T>(capacity);
         }
 
-        public DataStructure(T obj, int length)
+        protected DataStructure(T obj, int length)
         {
-            this.list = new List<T>(length);
-            for (int i = 0; i < this.list.Capacity; ++i)
+            if (length < 0)
+                throw new ArgumentOutOfRangeException();
+            else {
+                this.list = new List<T>(length);
+                for (int i = 0; i < this.list.Capacity; ++i)
                 this.list.Add(obj);
+            }
         }
 
-        public DataStructure(List<T> list)
+        protected DataStructure(List<T> list)
         {
             if (list == null)
                 throw new ArgumentNullException();
+            else
+                this.list = new List<T>(list);
+        }
 
-            this.list = new List<T>(list);
+        public virtual void Clear()
+        {
+            list.Clear();
         }
 
         public int Length
@@ -53,7 +65,7 @@ namespace LW07T1
         public virtual void Display()
         {
             foreach (var v in list)
-                Console.Write("{0,-3}", v);
+                Console.Write(v + " ");
             Console.WriteLine();
         }
 
