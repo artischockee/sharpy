@@ -13,11 +13,6 @@ namespace LW07T1
             get { return base.Length; }
         }
 
-        public void Clear()
-        {
-            list.Clear();
-        }
-
         public bool Contains(T obj)
         {
             for (int i = 0; i < list.Count - 1; ++i)

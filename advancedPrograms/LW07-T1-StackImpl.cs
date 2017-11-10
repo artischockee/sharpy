@@ -19,11 +19,6 @@ namespace LW07T1
             base.Display();
         }
 
-        public void Clear()
-        {
-            list.Clear();
-        }
-
         public bool Contains(T obj)
         {
             for (int i = (list.Count - 1); i >= 0; --i)
