@@ -17,7 +17,6 @@ namespace LW07T2
         {
             Console.WriteLine("if x = {0}, then y = {1:0.####}", x, y);
         }
-
     } // abstract class Function
 
     class Ellipse : Function
