@@ -7,9 +7,9 @@ namespace LW01
     public class MainModule
     {
         // Reads a truth table from specified file
-        public static void ReadTruthTable(out List<List<byte>> truthTable)
+        public static void ReadTruthTable(out List<byte[]> truthTable)
         {
-            truthTable = new List<List<byte>>();
+            truthTable = new List<byte[]>();
             StreamReader inputFile = new StreamReader("lw-01-input");
 
             while (!inputFile.EndOfStream) {
@@ -17,11 +17,11 @@ namespace LW01
                 var collection = new List<byte>();
                 foreach (var t in buffer)
                     collection.Add(byte.Parse(t));
-                truthTable.Add(collection);
+                truthTable.Add(collection.ToArray());
             }
         }
 
-        public static void Display<T>(List<List<T>> matrix)
+        public static void Display<T>(List<T[]> matrix)
         {
             foreach (var row in matrix) {
                 foreach (var element in row)
@@ -30,8 +30,14 @@ namespace LW01
             }
         }
 
+        // private static string AssembleFormulaePiece
+        // (
+        //     ref byte[] currRow,
+        //     ref
+        // )
+
         // Generates the DNF and CNF formulae and sends them to specified files
-        public static void GenerateFormulae(List<List<byte>> table)
+        public static void GenerateFormulae(List<byte[]> table)
         {
             StreamWriter fileDNF = new StreamWriter("lw-01-dnf");
             StreamWriter fileCNF = new StreamWriter("lw-01-cnf");
@@ -41,31 +47,27 @@ namespace LW01
 
             char[] vars = { 'A', 'B', 'C' };
 
-            int lastElement = table[List.Count - 1];
+            int lastElement = table[0].Length - 1;
 
             foreach (var row in table) {
-                if (row[row.Count - 1] == 1) {
+                if (row[lastElement] == 1) {
+                    // </ a new method will be here />
+
                     if (!string.IsNullOrEmpty(strDnf))
                         strDnf += " V ";
 
-                    for (int i = 0; i < (row.Count - 1); ++i) {
+                    for (int i = 0; i < lastElement; ++i) {
                         if (i == 0)
                             strDnf += "(";
 
-                        string piece = row[i] == 0 ? "-X" : "X";
+                        string piece = row[i] == 0 ? String.Concat('-', vars[i]) : vars[i].ToString(); // a difference'll be here
                         strDnf += piece;
 
-                        if (i < row.Count - 2)
+                        if (i < lastElement - 1)
                             strDnf += " ^ ";
-                        else if (i == row.Count - 2)
+                        else if (i == lastElement - 1)
                             strDnf += ")";
                     }
-
-                    // strDnf += (row[0] == 0 ? "(-A" : "(A");
-                    // strDnf += " ^ ";
-                    // strDnf += (row[1] == 0 ? "-B" : "B");
-                    // strDnf += " ^ ";
-                    // strDnf += (row[2] == 0 ? "-C)" : "C)");
                 }
                 else {
                     if (!string.IsNullOrEmpty(strCnf))
@@ -92,7 +94,7 @@ namespace LW01
         [STAThread]
         public static void Main(string[] args)
         {
-            List<List<byte>> truthTable;
+            List<byte[]> truthTable;
             ReadTruthTable(out truthTable);
 
             // Display(truthTable);
