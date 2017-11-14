@@ -30,11 +30,42 @@ namespace LW01
             }
         }
 
-        // private static string AssembleFormulaePiece
-        // (
-        //     ref byte[] currRow,
-        //     ref
-        // )
+        private static string AssembleFormulaePiece
+        (
+            byte[] currRow,
+            char[] varNames,
+            char operationSign
+        )
+        {
+            string formulaePiece = null; // a result string
+            int lastIndex = currRow.Length - 2;
+
+            byte comparer; // this variable is used in the assembly of a var definition
+            switch (operationSign) {
+                case 'V':
+                    comparer = 1; break;
+                case '^':
+                    comparer = 0; break;
+                default:
+                    throw new ArgumentException();
+            }
+
+            for (int i = 0; i < (lastIndex + 1); ++i) {
+                if (i == 0)
+                    formulaePiece += "(";
+
+                string varDef = currRow[i] == comparer ? String.Concat('-', varNames[i]) : varNames[i].ToString();
+
+                formulaePiece += varDef;
+
+                if (i < lastIndex)
+                    formulaePiece = formulaePiece + " " + operationSign + " ";
+                else if (i == lastIndex)
+                    formulaePiece += ")";
+            }
+
+            return formulaePiece;
+        } // private static string AssembleFormulaePiece(3 args)
 
         // Generates the DNF and CNF formulae and sends them to specified files
         public static void GenerateFormulae(List<byte[]> table)
@@ -44,42 +75,21 @@ namespace LW01
 
             string strDnf = null;
             string strCnf = null;
-
             char[] vars = { 'A', 'B', 'C' };
 
-            int lastElement = table[0].Length - 1;
-
+            int lastIndex = table[0].Length - 1; // used only in foreach
             foreach (var row in table) {
-                if (row[lastElement] == 1) {
-                    // </ a new method will be here />
-
+                if (row[lastIndex] == 1) {
                     if (!string.IsNullOrEmpty(strDnf))
                         strDnf += " V ";
-
-                    for (int i = 0; i < lastElement; ++i) {
-                        if (i == 0)
-                            strDnf += "(";
-
-                        string piece = row[i] == 0 ? String.Concat('-', vars[i]) : vars[i].ToString(); // a difference'll be here
-                        strDnf += piece;
-
-                        if (i < lastElement - 1)
-                            strDnf += " ^ ";
-                        else if (i == lastElement - 1)
-                            strDnf += ")";
-                    }
+                    strDnf += AssembleFormulaePiece(row, vars, '^');
                 }
                 else {
                     if (!string.IsNullOrEmpty(strCnf))
                         strCnf += " ^ ";
-
-                    strCnf += (row[0] == 0 ? "(A" : "(-A");
-                    strCnf += " V ";
-                    strCnf += (row[1] == 0 ? "B" : "-B");
-                    strCnf += " V ";
-                    strCnf += (row[2] == 0 ? "C)" : "-C)");
+                    strCnf += AssembleFormulaePiece(row, vars, 'V');
                 }
-            } // foreach (var row in truthTable)
+            }
 
             fileDNF.WriteLine(string.IsNullOrEmpty(strDnf) ? "0" : strDnf);
             fileCNF.WriteLine(string.IsNullOrEmpty(strCnf) ? "1" : strCnf);
@@ -96,9 +106,6 @@ namespace LW01
         {
             List<byte[]> truthTable;
             ReadTruthTable(out truthTable);
-
-            // Display(truthTable);
-
             GenerateFormulae(truthTable);
         }
     } // public class MainModule
