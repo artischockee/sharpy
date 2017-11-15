@@ -10,14 +10,15 @@ namespace LW01
         public static void ReadTruthTable(out List<byte[]> truthTable)
         {
             truthTable = new List<byte[]>();
-            StreamReader inputFile = new StreamReader("lw-01-input");
-
-            while (!inputFile.EndOfStream) {
-                string[] buffer = inputFile.ReadLine().Split();
-                var collection = new List<byte>();
-                foreach (var t in buffer)
-                    collection.Add(byte.Parse(t));
-                truthTable.Add(collection.ToArray());
+            using (StreamReader inputFile = new StreamReader("LW-01-Input"))
+            {
+                while (!inputFile.EndOfStream) {
+                    string[] buffer = inputFile.ReadLine().Split();
+                    var collection = new List<byte>();
+                    foreach (var t in buffer)
+                        collection.Add(byte.Parse(t));
+                    truthTable.Add(collection.ToArray());
+                }
             }
         }
 
@@ -70,8 +71,8 @@ namespace LW01
         // Generates the DNF and CNF formulae and sends them to specified files
         public static void GenerateFormulae(List<byte[]> table)
         {
-            StreamWriter fileDNF = new StreamWriter("lw-01-dnf");
-            StreamWriter fileCNF = new StreamWriter("lw-01-cnf");
+            StreamWriter fileDNF = new StreamWriter("LW-01-DNF");
+            StreamWriter fileCNF = new StreamWriter("LW-01-CNF");
 
             string strDnf = null;
             string strCnf = null;
