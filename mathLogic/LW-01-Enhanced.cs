@@ -1,40 +1,74 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.Linq;
 using System.IO;
+using System.Linq;
 
-namespace LW01
+namespace truthTable
 {
-    public class MainModule
+    public class TruthTable
     {
+        private readonly List<byte[]> _truthTable;
+        private int _argumentsAmount;
+        private int[] _truthPositions;
+
+        public TruthTable()
+        {
+            _truthTable = new List<byte[]>();
+            _argumentsAmount = 0;
+            _truthPositions = null;
+        }
+
+        public TruthTable(int argumentsAmount, int[] truthPositions = null)
+        {
+            if (argumentsAmount <= 0)
+                throw new ArgumentOutOfRangeException();
+            if (truthPositions != null && truthPositions.Any(x => x <= 0))
+                throw new ArgumentOutOfRangeException();                
+            
+            _truthTable = new List<byte[]>();
+            _argumentsAmount = argumentsAmount;
+            _truthPositions = truthPositions;
+        }
+
+        public void Display()
+        {
+            foreach (var row in _truthTable) {
+                foreach (var element in row)
+                    Console.Write(element + " ");
+                Console.WriteLine();
+            }
+        }
+
         // Formats a specified string that represents a binary number,
         // Adding zeroes in front of it
         private static string FormatToBinary(string initial, int neededLength)
         {
-            int zeroesAmount = neededLength - initial.Length;
-            string zeroes = new string('0', zeroesAmount);
+            var zeroesAmount = neededLength - initial.Length;
+            var zeroes = new string('0', zeroesAmount);
 
             return string.Concat(zeroes, initial);
         }
 
-        // Forms the specified truth table
-        private static void FormTruthTable(
-            ref List<byte[]> table, int argsAmount, int[] truthPos
-        )
+        public void FormTruthTable(int argsAmount = 0, int[] truthPos = null)
         {
-            int numOfLines = (int)Math.Pow(2, argsAmount);
-            int tPosUpperBound = truthPos.Length;
+            if (argsAmount == 0 && _argumentsAmount != 0)
+                argsAmount = _argumentsAmount;
+            else
+                throw new ArgumentNullException("Number of arguments cannot be 0 or less.");
+            if (truthPos == null && _truthPositions != null)
+                truthPos = _truthPositions;
+            
+            var numOfLines = (int)Math.Pow(2, argsAmount);
+            var tPosUpperBound = truthPos?.Length;
+            var neededRowLength = argsAmount; // for better semantics
 
             for (int i = 0, j = 0; i < numOfLines; ++i) {
-                string result = Convert.ToString(i, 2);
-                if (result.Length < argsAmount)
-                    result = FormatToBinary(result, argsAmount);
+                var binaryNum = Convert.ToString(i, 2);
+                if (binaryNum.Length < neededRowLength)
+                    binaryNum = FormatToBinary(binaryNum, neededRowLength); // Adds zeroes in front of one
 
-                var line = new List<byte>();
-                foreach (char number in result) {
-                    byte properValue = (byte)char.GetNumericValue(number);
-                    line.Add(properValue);
-                }
+                // Splits the result string into separated digits
+                var line = binaryNum.Select(digit => (byte) char.GetNumericValue(digit)).ToList();
 
                 if (j < tPosUpperBound && truthPos[j] == i) {
                     line.Add(1);
@@ -42,64 +76,58 @@ namespace LW01
                 } else
                     line.Add(0);
 
-                table.Add(line.ToArray());
+                _truthTable.Add(line.ToArray());
             }
         }
 
         // Reads truth table parameters from specified file,
         // Then forms specified truth table with gathered parameters
-        public static void ReadTableParameters(out List<byte[]> truthTable)
+        public void ReadTableParameters(StreamReader inputFile)
         {
-            truthTable = new List<byte[]>();
+            if (inputFile.EndOfStream)
+                throw new EndOfStreamException("Input file is empty.");
+            
+            int n; // amount of variables
+            int m; // amount of truth lines
 
-            int N, M; // N is amount of variables, M is amount of truth lines
-            int[] truthPositions; // Contain positions indexes of truth lines
+            var buffer = inputFile.ReadLine()?.Split();
+            if (buffer == null)
+                throw new Exception("Input file buffer was empty (check the input file)");
+            
+            n = int.Parse(buffer[0]);
+            m = int.Parse(buffer[1]);
 
-            // Parses values from the file and put them into the previous int's
-            using (var inputFile = new StreamReader("LW-01-Input-Enhanced"))
+            var truthPositions = new int[m];
+
+            // Does the action if there is second line in the input file
+            if (m > 0)
             {
-                string[] buffer;
+                buffer = inputFile.ReadLine()?.Split();
+                if (buffer == null)
+                    throw new Exception("Input file buffer was empty (check the input file)");
+                
+                for (var i = 0; i < m; ++i)
+                    truthPositions[i] = int.Parse(buffer[i]);
 
-                buffer = inputFile.ReadLine().Split();
-                N = int.Parse(buffer[0]);
-                M = int.Parse(buffer[1]);
-
-                truthPositions = new int[M];
-
-                // Does the action if there is second line in the input file
-                if (M > 0) {
-                    buffer = inputFile.ReadLine().Split();
-                    for (int i = 0; i < M; ++i)
-                        truthPositions[i] = int.Parse(buffer[i]);
-                }
-
-                if (!inputFile.EndOfStream)
-                    throw new EndOfStreamException(string.Format("File ending not found. One should contain 2 lines with integers."));
+                _truthPositions = truthPositions;
             }
 
-            FormTruthTable(ref truthTable, N, truthPositions);
+            if (!inputFile.EndOfStream)
+                throw new EndOfStreamException("File ending not found. One should contain 2 lines with integers.");
+
+            _argumentsAmount = n;
         }
 
-        public static void Display<T>(List<T[]> matrix)
-        {
-            foreach (var row in matrix) {
-                foreach (var element in row)
-                    Console.Write(element + " ");
-                Console.WriteLine();
-            }
-        }
-
-        private static string AssembleFormulaePiece
-        (
-            byte[] currRow,
-            string[] varNames,
+        private static string AssembleFormulaePiece(
+            IReadOnlyList<byte> currRow,
+            IReadOnlyList<string> varNames,
             char operationSign
         )
         {
             string formulaePiece = null; // a result string
-            int lastIndex = currRow.Length - 2;
+            var lastIndex = currRow.Count - 2;
 
-            byte comparer; // this variable is used in the assembly of a var definition
+            byte comparer; // used in the assembly of a var definition
             switch (operationSign) {
                 case 'V':
                     comparer = 1; break;
@@ -109,11 +137,11 @@ namespace LW01
                     throw new ArgumentException();
             }
 
-            for (int i = 0; i < (lastIndex + 1); ++i) {
+            for (var i = 0; i < lastIndex + 1; ++i) {
                 if (i == 0)
                     formulaePiece += "(";
 
-                string varDef = currRow[i] == comparer ? String.Concat('-', varNames[i]) : varNames[i].ToString();
+                var varDef = currRow[i] == comparer ? string.Concat('-', varNames[i]) : varNames[i];
 
                 formulaePiece += varDef;
 
@@ -124,25 +152,22 @@ namespace LW01
             }
 
             return formulaePiece;
-        } // private static string AssembleFormulaePiece(3 args)
+        }
 
         // Generates the DNF and CNF formulae and sends them to specified files
-        public static void GenerateFormulae(List<byte[]> table)
+        public void GenerateFormulae(StreamWriter fileDnf, StreamWriter fileCnf)
         {
-            StreamWriter fileDNF = new StreamWriter("LW-01-DNF-Enh");
-            StreamWriter fileCNF = new StreamWriter("LW-01-CNF-Enh");
-
             string strDnf = null;
             string strCnf = null;
-            char basicChar = 'A';
-            int argsAmount = table[0].Length - 1;
-            string[] vars = new string[argsAmount];
+            const char basicChar = 'A';
+            var argsAmount = _truthTable[0].Length - 1;
+            var vars = new string[argsAmount];
 
-            for (int i = 0; i < argsAmount; ++i)
-                vars[i] = string.Concat(basicChar, (i + 1));
+            for (var i = 0; i < argsAmount; ++i)
+                vars[i] = string.Concat(basicChar, i + 1);
 
-            int lastIndex = argsAmount; // used only in foreach
-            foreach (var row in table) {
+            var lastIndex = argsAmount; // used only in foreach
+            foreach (var row in _truthTable) {
                 if (row[lastIndex] == 1) {
                     if (!string.IsNullOrEmpty(strDnf))
                         strDnf += " V ";
@@ -155,30 +180,41 @@ namespace LW01
                 }
             }
 
-            fileDNF.WriteLine(string.IsNullOrEmpty(strDnf) ? "0" : strDnf);
-            fileCNF.WriteLine(string.IsNullOrEmpty(strCnf) ? "1" : strCnf);
-
-            fileDNF.Close();
-            fileCNF.Close();
-        } // public static void GenerateFormulae(1 arg)
-
+            fileDnf.WriteLine(string.IsNullOrEmpty(strDnf) ? "0" : strDnf);
+            fileCnf.WriteLine(string.IsNullOrEmpty(strCnf) ? "1" : strCnf);
+        }
+    } // public class TruthTable
+    
+    public static class MainModule
+    {
         /// <summary>
         ///   The main entry point for the application
         /// </summary>
         [STAThread]
-        public static void Main(string[] args)
+        public static void Main()
         {
-            List<byte[]> truthTable;
-            try {
-                ReadTableParameters(out truthTable);
-                GenerateFormulae(truthTable);
-                // Display(truthTable);
+            var ttable = new TruthTable();
+            const string inputFileName = "input";
+            const string outFileNameDnf = "outputDNF";
+            const string outFileNameCnf = "outputCNF";
+            
+            try
+            {
+                using (var inputFile = new StreamReader(inputFileName))
+                {
+                    ttable.ReadTableParameters(inputFile);
+                }
+
+                ttable.FormTruthTable();
+
+                using (var fileDnf = new StreamWriter(outFileNameDnf, false))
+                using (var fileCnf = new StreamWriter(outFileNameCnf, false))
+                {
+                    ttable.GenerateFormulae(fileDnf, fileCnf);
+                }
             }
-            catch (EndOfStreamException e) {
-                Console.WriteLine(e.Message);
-            }
-            catch (Exception e) {
-                Console.WriteLine("An undefined exception has been caught:");
+            catch (Exception e)
+            {
                 Console.WriteLine(e.Message);
             }
         }
