@@ -10,7 +10,7 @@ namespace LW01
         public static void ReadTruthTable(out List<byte[]> truthTable)
         {
             truthTable = new List<byte[]>();
-            using (StreamReader inputFile = new StreamReader("LW-01-Input"))
+            using (StreamReader inputFile = new StreamReader("input-easy"))
             {
                 while (!inputFile.EndOfStream) {
                     string[] buffer = inputFile.ReadLine().Split();
