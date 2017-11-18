@@ -23,8 +23,8 @@ namespace truthTable
             if (argumentsAmount <= 0)
                 throw new ArgumentOutOfRangeException();
             if (truthPositions != null && truthPositions.Any(x => x <= 0))
-                throw new ArgumentOutOfRangeException();                
-            
+                throw new ArgumentOutOfRangeException();
+
             _truthTable = new List<byte[]>();
             _argumentsAmount = argumentsAmount;
             _truthPositions = truthPositions;
@@ -57,7 +57,7 @@ namespace truthTable
                 throw new ArgumentNullException("Number of arguments cannot be 0 or less.");
             if (truthPos == null && _truthPositions != null)
                 truthPos = _truthPositions;
-            
+
             var numOfLines = (int)Math.Pow(2, argsAmount);
             var tPosUpperBound = truthPos?.Length;
             var neededRowLength = argsAmount; // for better semantics
@@ -86,14 +86,14 @@ namespace truthTable
         {
             if (inputFile.EndOfStream)
                 throw new EndOfStreamException("Input file is empty.");
-            
+
             int n; // amount of variables
             int m; // amount of truth lines
 
             var buffer = inputFile.ReadLine()?.Split();
             if (buffer == null)
                 throw new Exception("Input file buffer was empty (check the input file)");
-            
+
             n = int.Parse(buffer[0]);
             m = int.Parse(buffer[1]);
 
@@ -105,7 +105,7 @@ namespace truthTable
                 buffer = inputFile.ReadLine()?.Split();
                 if (buffer == null)
                     throw new Exception("Input file buffer was empty (check the input file)");
-                
+
                 for (var i = 0; i < m; ++i)
                     truthPositions[i] = int.Parse(buffer[i]);
 
@@ -184,7 +184,7 @@ namespace truthTable
             fileCnf.WriteLine(string.IsNullOrEmpty(strCnf) ? "1" : strCnf);
         }
     } // public class TruthTable
-    
+
     public static class MainModule
     {
         /// <summary>
@@ -197,7 +197,7 @@ namespace truthTable
             const string inputFileName = "input";
             const string outFileNameDnf = "outputDNF";
             const string outFileNameCnf = "outputCNF";
-            
+
             try
             {
                 using (var inputFile = new StreamReader(inputFileName))
@@ -216,6 +216,12 @@ namespace truthTable
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+            }
+            finally {
+                if (File.Exists(outFileNameCnf) && File.Exists(outFileNameDnf))
+                    Console.WriteLine("Output files were successfully created.");
+                else
+                    Console.WriteLine("Output files were not created.");
             }
         }
     } // public class MainModule
