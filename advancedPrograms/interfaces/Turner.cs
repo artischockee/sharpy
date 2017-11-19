@@ -7,12 +7,15 @@ namespace interfaces
         // Fields:
         
         private static int _amountOfObjects;
-        private readonly string _name;
-        private readonly string _surname;
-        private readonly int _indexNumber;
+        
         private const int RequiredAge = 18;
         private const int LowerCategory = 2;
         private const int HigherCategory = 6;
+        
+        private readonly int _indexNumber;
+        private readonly string _name;
+        private readonly string _surname;
+        
         private int _age;
         private int _category;
         
@@ -21,7 +24,6 @@ namespace interfaces
         public static int AmountOfObjects => _amountOfObjects;
         public int IndexNumber => _indexNumber;
         
-        
         // Constructors:
         
         static Turner()
@@ -29,7 +31,7 @@ namespace interfaces
             _amountOfObjects = 0;
         }
         
-        public Turner(string fullName, int age, int category)
+        public Turner(string fullName, int age, int category = 2)
         {
             if (fullName == null)
                 throw new ArgumentNullException();
@@ -49,7 +51,7 @@ namespace interfaces
             _indexNumber = _amountOfObjects++;
         }
         
-        // Methods
+        // Methods:
         
         public override void Work()
         {
@@ -60,6 +62,12 @@ namespace interfaces
         {
             var workReport = $"A work report written by employee {_name} {_surname} (turner)";
             return workReport;
+        }
+        
+        public void DisplayInfo()
+        {
+            Console.WriteLine("Info about turner:");
+            Console.WriteLine($"> Name: {_name} {_surname}, age: {_age}, category: {_category}.");
         }
     }
 }
