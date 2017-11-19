@@ -7,10 +7,13 @@ namespace interfaces
         // Fields:
 
         private static int _amountOfObjects;
+        
+        private const int RequiredAge = 16;
+        
+        private readonly int _indexNumber;
         private readonly string _name;
         private readonly string _surname;
-        private readonly int _indexNumber;
-        private const int RequiredAge = 16;
+        
         private int _age;
         private string _placeOfWork;
         private string _placeOfStudy;
@@ -59,6 +62,9 @@ namespace interfaces
 
         public override string WriteReport()
         {
+            if (_placeOfWork == "none")
+                return null;
+            
             var workReport = $"A work report written by employee {_name} {_surname} (student)";
             return workReport;
         }
@@ -71,8 +77,8 @@ namespace interfaces
         public void DisplayInfo()
         {
             Console.WriteLine("Info about part-time student:");
-            Console.WriteLine($"> Name: {_name} {_surname}, age: {_age},");
-            Console.WriteLine($">  place of study: {_placeOfStudy}, job: {_placeOfWork}");
+            Console.WriteLine($"> Name: {_name} {_surname}, age: {_age};");
+            Console.WriteLine($"> Place of study: {_placeOfStudy}, job: {_placeOfWork}.");
         }
     }
 }
