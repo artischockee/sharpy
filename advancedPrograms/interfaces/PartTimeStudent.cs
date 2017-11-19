@@ -57,6 +57,12 @@ namespace interfaces
                 Console.WriteLine($"Student {_name} {_surname} is doing some work at {_placeOfWork}");
         }
 
+        public override string WriteReport()
+        {
+            var workReport = $"A work report written by employee {_name} {_surname} (student)";
+            return workReport;
+        }
+
         public void Study()
         {
             Console.WriteLine($"Student {_name} {_surname} is studying.");
