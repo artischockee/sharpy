@@ -3,25 +3,40 @@ using System.Collections.Generic;
 
 namespace interfaces
 {
+    public static class Test
+    {
+        public static void Experiment()
+        {
+            var employees = new List<Employee>
+            {
+                new Turner("John Travolta", 63, 6),
+                new Turner("Anthony Stark", 52, 3),
+                new PartTimeStudent("Jack Sparrow", 53, "Oxford University", "Hollywood"),
+                new PartTimeStudent("Keanu Reeves", 53, "КИПТСУ"),
+                new Turner("Bruce Willis", 62)
+            };
+
+            foreach (var employee in employees)
+            {
+                employee.Work();
+                Console.WriteLine(employee.WriteReport());
+            }
+        }
+    }
+    
     public class Program
     {
         public static void Main(string[] args)
         {
-            var students = new List<PartTimeStudent>
+            try
             {
-                new PartTimeStudent("Tony Stark", 52, "MIT"),
-                new PartTimeStudent("Artem Piskarev", 19, "TUCSR", "KFC"),
-                new PartTimeStudent("Irina Iost", 18, "TPU", "Google")
-            };
-
-            foreach (var student in students)
-            {
-                student.DisplayInfo();
-                student.Study();
-                student.Work();
+                Test.Experiment();
             }
-            
-            
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw;
+            }
         }
     }
 }
