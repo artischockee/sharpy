@@ -1,7 +1,7 @@
 ﻿namespace interfaces
 {
-    internal abstract class Employee
+    public abstract class Employee
     {
-        internal abstract void Work();
+        public abstract void Work();
     }
 }
