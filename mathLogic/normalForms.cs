@@ -217,12 +217,11 @@ namespace truthTable
             {
                 Console.WriteLine(e.Message);
             }
-            finally {
-                if (File.Exists(outFileNameCnf) && File.Exists(outFileNameDnf))
-                    Console.WriteLine("Output files were successfully created.");
-                else
-                    Console.WriteLine("Output files were not created.");
-            }
+
+            if (File.Exists(outFileNameCnf) && File.Exists(outFileNameDnf))
+                Console.WriteLine("Output files were successfully created.");
+            else
+                Console.WriteLine("Output files were not created.");
         }
     } // public class MainModule
 } // namespace LW01
