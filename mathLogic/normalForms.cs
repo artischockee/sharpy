@@ -39,16 +39,6 @@ namespace truthTable
             }
         }
 
-        // Formats a specified string that represents a binary number,
-        // Adding zeroes in front of it
-        private static string FormatToBinary(string initial, int neededLength)
-        {
-            var zeroesAmount = neededLength - initial.Length;
-            var zeroes = new string('0', zeroesAmount);
-
-            return string.Concat(zeroes, initial);
-        }
-
         public void FormTruthTable(int argsAmount = 0, int[] truthPos = null)
         {
             if (argsAmount == 0 && _argumentsAmount != 0)
@@ -65,7 +55,7 @@ namespace truthTable
             for (int i = 0, j = 0; i < numOfLines; ++i) {
                 var binaryNum = Convert.ToString(i, 2);
                 if (binaryNum.Length < neededRowLength)
-                    binaryNum = FormatToBinary(binaryNum, neededRowLength); // Adds zeroes in front of one
+                    binaryNum = binaryNum.PadLeft(neededRowLength, '0');
 
                 // Splits the result string into separated digits
                 var line = binaryNum.Select(digit => (byte) char.GetNumericValue(digit)).ToList();
