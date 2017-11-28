@@ -27,7 +27,7 @@ namespace turingMachine
     {       
         private const int RegulationLength = 5;
         private readonly List<FuncScheme> _funcScheme;
-        private readonly List<char> _instructionTape;
+        private List<char> _instructionTape;
         private int _conditionsAmount;
 
         public TuringMachine()
@@ -37,30 +37,41 @@ namespace turingMachine
             _conditionsAmount = 0;
         }
 
-        private void DisplayTape()
+        public void ExportTape(StreamWriter outputFile)
         {
-            foreach (var symbol in _instructionTape)
-                Console.Write($"{symbol}");
+            outputFile.WriteLine(_instructionTape.ToArray());
+        }
+
+        // Trims all leading and trailing zeroes except for the closest ones
+        private void MakeDecentTape()
+        {
+            var stringTape = new string(_instructionTape.ToArray());
+            stringTape = stringTape.Trim('0');
+            stringTape = string.Concat("0", stringTape, "0");
+            _instructionTape = stringTape.ToList();
+        }
+        
+        private void DisplayTape(int pos = 0)
+        {
+            for (var i = 0; i < _instructionTape.Count; ++i)
+                Console.Write(i == pos ? $"[{_instructionTape[i]}]" : $"{_instructionTape[i]}");
             Console.Write(" -> ");
         }
         
+        // Imitates the Turing machine's work in accordance to specified parameters and schemes
         public void PerformTask(int state = 1, int pos = 0)
         {
-            if (state < 1 || state >= _conditionsAmount)
-                throw new ArgumentOutOfRangeException(
-                    $"Initial state cannot be equal {state} (only from 1 to {_conditionsAmount}");
+            if (state <= 0 || state >= _conditionsAmount)
+                throw new ArgumentOutOfRangeException(nameof(state));
             if (pos < 0 || pos > _instructionTape.Count)
-                throw new ArgumentOutOfRangeException(
-                    $"Initial position cannot be equal {pos} (only from 0 to {_instructionTape.Count}");
-            
+                throw new ArgumentOutOfRangeException(nameof(pos));
+
             while (state != 0)
             {
                 if (state < 0 || state >= _conditionsAmount)
-                    throw new ArgumentOutOfRangeException(
-                        $"While performing the task, 'state' argument has gone out of range. Value: {state}");
+                    throw new ArgumentOutOfRangeException(nameof(state));
                 if (pos < 0 || pos > _instructionTape.Count)
-                    throw new ArgumentOutOfRangeException(
-                        $"While performing the task, 'pos' argument has gone out of range. Value: {pos}");
+                    throw new ArgumentOutOfRangeException(nameof(pos));
                 
                 var currRegulation = _funcScheme.First(row => row.Sprev == state && row.Nprev == _instructionTape[pos]);
 
@@ -75,12 +86,14 @@ namespace turingMachine
                 else if (pos == _instructionTape.Count)
                     _instructionTape.Add('0');
 
-                DisplayTape();
+                DisplayTape(pos);
             }
+
+            MakeDecentTape();
         }
 
         // Reads parameters, regulations and instructions from specified file
-        public void ReadParameters(StreamReader inputFile)
+        public void ImportParameters(StreamReader inputFile)
         {
             if (inputFile.EndOfStream)
                 throw new EndOfStreamException("Input file is empty.");
@@ -113,7 +126,7 @@ namespace turingMachine
                 );
             }
             
-            var tape = inputFile.ReadLine()?.ToArray();
+            var tape = inputFile.ReadLine()?.ToCharArray();
             if (tape == null)
                 throw new Exception("Can't find the tape in the last line of the input file.");
 
@@ -139,14 +152,12 @@ namespace turingMachine
             try
             {
                 using (var input = new StreamReader(inputFile))
-                    turing.ReadParameters(input);
+                    turing.ImportParameters(input);
 
                 turing.PerformTask();
 
-//                using (var output = new StreamWriter(outputFile, false))
-//                {
-//                    turing.WriteOut(output);
-//                }
+                using (var output = new StreamWriter(outputFile, false))
+                    turing.ExportTape(output);
             }
             catch (Exception e)
             {
