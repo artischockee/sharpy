@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace turingMachine
+namespace mathLogic
 {
-    public struct FuncScheme
+    internal struct FuncScheme
     {
         public readonly int Sprev;
         public readonly char Nprev;
@@ -29,6 +29,9 @@ namespace turingMachine
         private readonly List<char> _alphabetPower;
         private List<char> _instructionTape;
         private int _conditionsAmount;
+        private int _initialState;
+        private int _finalState;
+        private int _position;
        
         public TuringMachine()
         {
@@ -60,9 +63,14 @@ namespace turingMachine
                 Console.Write(i == pos ? $"[{_instructionTape[i]}]" : $"{_instructionTape[i]}");
             Console.Write(" -> ");
         }
+
+        public void PerformTask()
+        {
+            PerformTask(_initialState, _finalState, _position);
+        }
         
         // Imitates the Turing machine's work in accordance to specified parameters and schemes
-        public void PerformTask(int state = 1, int finalState = 0, int pos = 0)
+        public void PerformTask(int state, int finalState, int pos)
         {
             if (state < 0 || state > _conditionsAmount)
                 throw new ArgumentOutOfRangeException(nameof(state));
@@ -77,7 +85,7 @@ namespace turingMachine
                     throw new ArgumentOutOfRangeException(nameof(pos));
                 
                 var currRegulation = _funcScheme.First(row => row.Sprev == state && row.Nprev == _instructionTape[pos]);
-
+                
                 _instructionTape[pos] = currRegulation.Nnext;
                 state = currRegulation.Snext;
                 pos += currRegulation.Move;
@@ -148,10 +156,18 @@ namespace turingMachine
             
             var tape = inputFile.ReadLine()?.ToCharArray();
             if (string.IsNullOrEmpty(tape?.ToString()))
-                throw new Exception("Can't find the tape in the last line of the input file.");
+                throw new Exception("Can't find the tape in the penultimate line of the input file.");
 
             foreach (var symbol in tape)
                 _instructionTape.Add(symbol);
+
+            var states = inputFile.ReadLine()?.Split();
+            if (string.IsNullOrEmpty(states?.ToString()))
+                throw new Exception("Can't find the state and position parameters in the last line of the input file.");
+            
+            _initialState = int.Parse(states[0]);
+            _finalState = int.Parse(states[1]);
+            _position = int.Parse(states[2]);
             
             if (!inputFile.EndOfStream)
                 throw new EndOfStreamException("File ending not found. One should contain 2 lines with integers.");
@@ -160,9 +176,9 @@ namespace turingMachine
         } // public void ReadParameters(StreamReader inputFile)
     } // public class TuringMachine
 
-    public static class MainModule
+    public static class MainTuringMachine
     {
-        public static void Main()
+        public static void Execute()
         {
             const string inputFile = "input";
             const string outputFile = "output";
@@ -174,7 +190,7 @@ namespace turingMachine
                 using (var input = new StreamReader(inputFile))
                     turing.ImportParameters(input);
 
-                turing.PerformTask(0, 9);
+                turing.PerformTask();
 
                 using (var output = new StreamWriter(outputFile, false))
                     turing.ExportTape(output);

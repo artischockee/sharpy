@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace truthTable
+namespace mathLogic
 {
     public class TruthTable
     {
@@ -44,7 +44,7 @@ namespace truthTable
             if (argsAmount == 0 && _argumentsAmount != 0)
                 argsAmount = _argumentsAmount;
             else
-                throw new ArgumentNullException("Number of arguments cannot be 0 or less.");
+                throw new ArgumentNullException($"Number of arguments cannot be {0} or less.");
             if (truthPos == null && _truthPositions != null)
                 truthPos = _truthPositions;
 
@@ -175,13 +175,9 @@ namespace truthTable
         }
     } // public class TruthTable
 
-    public static class MainModule
+    public static class MainNormalForms
     {
-        /// <summary>
-        ///   The main entry point for the application
-        /// </summary>
-        [STAThread]
-        public static void Main()
+        public static void Execute()
         {
             var ttable = new TruthTable();
             const string inputFileName = "input";
@@ -191,17 +187,13 @@ namespace truthTable
             try
             {
                 using (var inputFile = new StreamReader(inputFileName))
-                {
                     ttable.ReadTableParameters(inputFile);
-                }
 
                 ttable.FormTruthTable();
 
                 using (var fileDnf = new StreamWriter(outFileNameDnf, false))
                 using (var fileCnf = new StreamWriter(outFileNameCnf, false))
-                {
                     ttable.GenerateFormulae(fileDnf, fileCnf);
-                }
             }
             catch (Exception e)
             {
