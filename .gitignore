@@ -6,3 +6,7 @@
 *.txt
 *.sln
 *.csproj
+.idea/
+bin/
+obj/
+Properties/
