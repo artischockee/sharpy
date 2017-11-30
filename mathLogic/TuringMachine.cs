@@ -23,7 +23,7 @@ namespace mathLogic
         }
     }
     
-    public class TuringMachine
+    internal class TuringMachine
     {
         private readonly List<FuncScheme> _funcScheme;
         private readonly List<char> _alphabetPower;
@@ -176,9 +176,16 @@ namespace mathLogic
         } // public void ReadParameters(StreamReader inputFile)
     } // public class TuringMachine
 
-    public static class MainTuringMachine
+    public class MainTuringMachine : Program
     {
-        public static void Execute()
+        private const string ProgramName = "Turing Machine";
+
+        protected internal override void ShowName()
+        {
+            Console.WriteLine(ProgramName);
+        }
+        
+        protected internal override void Execute()
         {
             const string inputFile = "input";
             const string outputFile = "output";

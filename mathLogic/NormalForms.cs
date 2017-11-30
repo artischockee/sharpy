@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace mathLogic
 {
-    public class TruthTable
+    internal class TruthTable
     {
         private readonly List<byte[]> _truthTable;
         private int _argumentsAmount;
@@ -175,9 +175,16 @@ namespace mathLogic
         }
     } // public class TruthTable
 
-    public static class MainNormalForms
+    public class MainNormalForms : Program
     {
-        public static void Execute()
+        private const string ProgramName = "Normal forms";
+
+        protected internal override void ShowName()
+        {
+            Console.WriteLine(ProgramName);
+        }
+
+        protected internal override void Execute()
         {
             var ttable = new TruthTable();
             const string inputFileName = "input";
