@@ -19,6 +19,9 @@ namespace mathLogic
     
     public class Collection : Program, IEnumerable<Program>
     {
+        // Please, don't touch this constant.
+        // The program feels itself pretty good with this very number (1).
+        // Otherwise, see usages of this one - especially in Execute() method.
         private const int InitialIndexOfProgram = 1;
         private readonly List<Program> _programs;
 
