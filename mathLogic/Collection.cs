@@ -31,7 +31,8 @@ namespace mathLogic
             _programs = new List<Program>
             {
                 new MainNormalForms(),
-                new MainTuringMachine()
+                new MainTuringMachine(),
+                new MainMarkovAlgorithm()
             };
         }
 
