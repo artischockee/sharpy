@@ -11,7 +11,7 @@ namespace interfaces
     {
         public abstract string Name { get; }
         public abstract void Work();
-        public abstract string WriteReport();
+        public abstract void DisplayInfo();
 
         public static void SortTurnersByName(List<Employee> list)
         {

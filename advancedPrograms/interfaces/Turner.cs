@@ -55,13 +55,7 @@ namespace interfaces
             Console.WriteLine($"Turner {Name} is doing some work.");
         }
         
-        public override string WriteReport()
-        {
-            var workReport = $"A work report written by employee {Name} (turner)";
-            return workReport;
-        }
-        
-        public void DisplayInfo()
+        public override void DisplayInfo()
         {
             Console.WriteLine("Info about turner:");
             Console.WriteLine($"> Name: {Name}, age: {_age}, category: {_category}.");
