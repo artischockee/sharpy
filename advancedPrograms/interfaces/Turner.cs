@@ -2,7 +2,7 @@
 
 namespace interfaces
 {
-    public class Turner : Employee
+    public sealed class Turner : Employee
     {
         // Fields:
         
