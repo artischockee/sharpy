@@ -13,8 +13,7 @@ namespace interfaces
         private const int HigherCategory = 6;
         
         private readonly int _indexNumber;
-        private readonly string _name;
-        private readonly string _surname;
+        public override string Name { get; }
         
         private int _age;
         private int _category;
@@ -23,7 +22,7 @@ namespace interfaces
         
         public static int AmountOfObjects => _amountOfObjects;
         public int IndexNumber => _indexNumber;
-        
+
         // Constructors:
         
         static Turner()
@@ -31,20 +30,18 @@ namespace interfaces
             _amountOfObjects = 0;
         }
         
-        public Turner(string fullName, int age, int category = 2)
+        public Turner(string name, int age, int category = LowerCategory)
         {
-            if (fullName == null)
-                throw new ArgumentNullException();
+            if (name == null)
+                throw new ArgumentNullException(nameof(name));
             if (age < RequiredAge)
-                throw new ArgumentOutOfRangeException($"'Age' must be greater than {RequiredAge}");
+                throw new ArgumentOutOfRangeException(
+                    $"'Age' must be greater than {RequiredAge} or equal");
             if (category < LowerCategory || category > HigherCategory)
                 throw new ArgumentOutOfRangeException(
-                    $"'Category' must be in range from {LowerCategory} to {HigherCategory}"
-                );
+                    $"'Category' must be in range from {LowerCategory} to {HigherCategory}");
 
-            var name = fullName.Split();
-            _name = name[0];
-            _surname = name[1];
+            Name = name;
             _age = age;
             _category = category;
             
@@ -55,19 +52,19 @@ namespace interfaces
         
         public override void Work()
         {
-            Console.WriteLine($"Turner {_surname} is doing some work.");
+            Console.WriteLine($"Turner {Name} is doing some work.");
         }
         
         public override string WriteReport()
         {
-            var workReport = $"A work report written by employee {_name} {_surname} (turner)";
+            var workReport = $"A work report written by employee {Name} (turner)";
             return workReport;
         }
         
         public void DisplayInfo()
         {
             Console.WriteLine("Info about turner:");
-            Console.WriteLine($"> Name: {_name} {_surname}, age: {_age}, category: {_category}.");
+            Console.WriteLine($"> Name: {Name}, age: {_age}, category: {_category}.");
         }
     }
 }
