@@ -12,12 +12,16 @@ namespace mathLogic
                 collection.Display();
                 
                 Console.WriteLine("Type number of program: ");
-                var chosenProgram = int.Parse(Console.ReadLine());
-                collection.Execute(chosenProgram);
+                var chosenProgram = Console.ReadLine();
+                if (string.IsNullOrEmpty(chosenProgram))
+                    throw new Exception();
+                
+                collection.Execute(int.Parse(chosenProgram));
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
+                throw;
             }
         }
     }
