@@ -23,44 +23,34 @@ namespace mathLogic
     {
         private const char Zero = '#';
         private readonly List<RegulationsTable> _regulationsTable;
-        private string _operatedWord;
+        public string OperatedWord { get; private set; }
 
-        public void Disp()
-        {
-            Console.WriteLine(_operatedWord);
-        }
-        
         public MarkovAlgorithm()
         {
             _regulationsTable = new List<RegulationsTable>();
         }
 
-        public void ExportWord(StreamWriter outputFile)
-        {
-            outputFile.WriteLine(_operatedWord);
-        }
-
         // Trims all leading and trailing zeroes
         private void TrimWord()
         {
-            _operatedWord = _operatedWord.Trim(Zero);
-            if (string.IsNullOrEmpty(_operatedWord))
-                _operatedWord += Zero;
+            OperatedWord = OperatedWord.Trim(Zero);
+            if (string.IsNullOrEmpty(OperatedWord))
+                OperatedWord += Zero;
         }
         
         // Imitates the Markov Algorithm's work in accordance to specified regulations
         public void PerformTask()
         {
-            Console.Write($"[Initial] {_operatedWord} ");
+            Console.Write($"[Initial] {OperatedWord} ");
             foreach (var reg in _regulationsTable)
             {
                 var isClosingRegulation = false;
-                while (_operatedWord.Contains(reg.LeftWord))
+                while (OperatedWord.Contains(reg.LeftWord))
                 {
                     var regex = new Regex(Regex.Escape(reg.LeftWord));
-                    _operatedWord = regex.Replace(_operatedWord, reg.RightWord, 1);
+                    OperatedWord = regex.Replace(OperatedWord, reg.RightWord, 1);
                     
-                    Console.Write($"-> {_operatedWord} ");
+                    Console.Write($"-> {OperatedWord} ");
 
                     if (reg.Statement == 1)
                     {
@@ -106,10 +96,10 @@ namespace mathLogic
             if (string.IsNullOrEmpty(buffer))
                 throw new Exception("Last line (an initial word) of input file was empty.");
 
-            _operatedWord = buffer;
+            OperatedWord = buffer;
 
             if (!inputFile.EndOfStream)
-                throw new EndOfStreamException("File ending not found. One should contain 2 lines with integers.");
+                throw new EndOfStreamException("Input file ending not found.");
         }
     }
 
@@ -135,10 +125,10 @@ namespace mathLogic
                     markov.ImportParameters(input);
                     
                 markov.PerformTask();
-                markov.Disp();
+                Console.WriteLine(markov.OperatedWord);
 
                 using (var output = new StreamWriter(outputFile, false))
-                    markov.ExportWord(output);
+                    output.WriteLine(markov.OperatedWord);
                 
                 Console.WriteLine("Operations were successfully completed.");
             }
