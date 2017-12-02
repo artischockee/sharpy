@@ -32,7 +32,8 @@ namespace mathLogic
             {
                 new MainNormalForms(),
                 new MainTuringMachine(),
-                new MainMarkovAlgorithm()
+                new MainMarkovAlgorithm(),
+                new MainImplication()
             };
         }
 
