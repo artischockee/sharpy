@@ -11,7 +11,7 @@ namespace mathLogic
                 var collection = new Collection();
                 collection.Display();
                 
-                Console.WriteLine("Type number of program: ");
+                Console.Write("Type number of program: ");
                 var chosenProgram = Console.ReadLine();
                 if (string.IsNullOrEmpty(chosenProgram))
                     throw new Exception();
