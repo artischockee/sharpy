@@ -173,7 +173,7 @@ namespace mathLogic
             fileDnf.WriteLine(string.IsNullOrEmpty(strDnf) ? "0" : strDnf);
             fileCnf.WriteLine(string.IsNullOrEmpty(strCnf) ? "1" : strCnf);
         }
-    } // public class TruthTable
+    }
 
     public class MainNormalForms : Program
     {
@@ -212,5 +212,5 @@ namespace mathLogic
             else
                 Console.WriteLine("Output files were not created.");
         }
-    } // public class MainModule
-} // namespace LW01
+    }
+}
