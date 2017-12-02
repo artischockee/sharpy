@@ -24,7 +24,7 @@ namespace mathLogic
         private const char Zero = '#';
         private readonly List<RegulationsTable> _regulationsTable;
         public string OperatedWord { get; private set; }
-
+        
         public MarkovAlgorithm()
         {
             _regulationsTable = new List<RegulationsTable>();
@@ -33,7 +33,7 @@ namespace mathLogic
         // Trims all leading and trailing zeroes
         private void TrimWord()
         {
-            OperatedWord = OperatedWord.Trim(Zero);
+            OperatedWord = OperatedWord.Trim(Zero); 
             if (string.IsNullOrEmpty(OperatedWord))
                 OperatedWord += Zero;
         }
@@ -42,25 +42,24 @@ namespace mathLogic
         public void PerformTask()
         {
             Console.Write($"[Initial] {OperatedWord} ");
-            foreach (var reg in _regulationsTable)
+            var isClosingRegulation = false;
+            
+            while (!isClosingRegulation)
             {
-                var isClosingRegulation = false;
-                while (OperatedWord.Contains(reg.LeftWord))
+                foreach (var reg in _regulationsTable)
                 {
+                    if (!OperatedWord.Contains(reg.LeftWord)) continue;
+                    
                     var regex = new Regex(Regex.Escape(reg.LeftWord));
                     OperatedWord = regex.Replace(OperatedWord, reg.RightWord, 1);
-                    
+                        
                     Console.Write($"-> {OperatedWord} ");
 
                     if (reg.Statement == 1)
-                    {
                         isClosingRegulation = true;
-                        break;
-                    }
-                }
-                
-                if (isClosingRegulation)
+                        
                     break;
+                }
             }
             Console.WriteLine();
 
@@ -96,7 +95,7 @@ namespace mathLogic
             if (string.IsNullOrEmpty(buffer))
                 throw new Exception("Last line (an initial word) of input file was empty.");
 
-            OperatedWord = buffer;
+            OperatedWord = string.Concat("#", buffer);
 
             if (!inputFile.EndOfStream)
                 throw new EndOfStreamException("Input file ending not found.");
@@ -123,7 +122,7 @@ namespace mathLogic
             {
                 using (var input = new StreamReader(inputFile))
                     markov.ImportParameters(input);
-                    
+                
                 markov.PerformTask();
                 Console.WriteLine(markov.OperatedWord);
 
