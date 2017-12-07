@@ -8,9 +8,7 @@ namespace informationSystem
         private static int _amountOfObjects;
         
         public override string Name { get; protected set; }
-        public override string Address { get; protected set; }
         public override string Tariff { get; protected set; }
-        public override string Contacts { get; protected set; }
         public override double Discount { get; protected set; }
         public override int YearsOfUsage { get; protected set; }
 
@@ -26,9 +24,7 @@ namespace informationSystem
         public CorporateCustomer()
         {
             Name = "null";
-            Address = "null";
             Tariff = "null";
-            Contacts = "null";
             Discount = 0;
             YearsOfUsage = 0;
 
@@ -36,17 +32,15 @@ namespace informationSystem
         }
 
         public CorporateCustomer(
-            string name, string address, string tariff, string contacts, int you = 0)
+            string name, string tariff, int you = 0)
         {
-            if (name == null || address == null || tariff == null || contacts == null)
+            if (name == null || tariff == null)
                 throw new ArgumentNullException("CorporateCustomer (Constructor): One of the args was empty.");
             if (you < 0)
                 throw new ArgumentOutOfRangeException(nameof(you));
 
             Name = name;
-            Address = address;
             Tariff = tariff;
-            Contacts = contacts;
             YearsOfUsage = you;
             
             CalcDiscount();

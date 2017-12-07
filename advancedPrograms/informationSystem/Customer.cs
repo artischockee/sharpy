@@ -32,9 +32,7 @@ namespace informationSystem
         // Name is used both for individual and corporated customers.
         public abstract string Name { get; protected set; }
 
-        public abstract string Address { get; protected set; }
         public abstract string Tariff { get; protected set; }
-        public abstract string Contacts { get; protected set; }
         public abstract double Discount { get; protected set; }
 
         // Internet-operator provides discounts for clients
