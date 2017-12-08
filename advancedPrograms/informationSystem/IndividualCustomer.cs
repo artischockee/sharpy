@@ -2,67 +2,79 @@
 
 namespace informationSystem
 {
-    internal sealed class IndividualCustomer : Customer
+    internal sealed class IndividualCustomer : Customer, IAutoCounter
     {
-        private const string CustomerType = "Individual customer";
-        private static int _amountOfObjects;
+        // Fields:
         
-        public override string Name { get; protected set; }
-        public override string Tariff { get; protected set; }
-        public override double Discount { get; protected set; }
-        public override int YearsOfUsage { get; protected set; }
-        
-        public override string Type => CustomerType;
+        public static int AmountOfObjects { get; private set; }
 
+        private readonly int _customerIdentifier;
         private readonly string _dateOfBirth;
-        private readonly int _customerId;
+        
+        // Properties:
+
+        public override string Name { get; }
+        public override string Address { get; }
+        public override string Contacts { get; }
+        public override Tariff CurrentTariff { get; }
+        public override int YearsOfUsage { get; }
+        protected override double Discount { get; set; }
+        public override double MonthlyPayment { get; }
+
+        // Constructors:
 
         static IndividualCustomer()
         {
-            _amountOfObjects = 0;
-        }
-        
-        public IndividualCustomer()
-        {
-            Name = "null";
-            Tariff = "null";
-            Discount = 0;
-            YearsOfUsage = 0;
-            _dateOfBirth = "null";
-
-            _customerId = _amountOfObjects;
+            AmountOfObjects = 0;
         }
         
         public IndividualCustomer(
-            string name, string tariff, string dob, int you = 0)
+            string name, string dob, string address,
+            string contacts, Tariff tariff, int you = 0)
         {
-            if (name == null || tariff == null || dob == null)
-                throw new ArgumentNullException("IndividualCustomer (Constructor): One of the args was empty.");
+            if (string.IsNullOrEmpty(name)
+                || string.IsNullOrEmpty(dob)
+                || string.IsNullOrEmpty(address)
+                || string.IsNullOrEmpty(contacts))
+                throw new ArgumentNullException("ArgNullException in IndividualCustomer's constructor.");
             if (you < 0)
-                throw new ArgumentOutOfRangeException(nameof(you));
+                throw new ArgumentOutOfRangeException();
 
             Name = name;
-            Tariff = tariff;
-            YearsOfUsage = you;
             _dateOfBirth = dob;
-            
-            CalcDiscount();
+            Address = address;
+            Contacts = contacts;
+            CurrentTariff = tariff;
+            YearsOfUsage = you;
 
-            _customerId = ++_amountOfObjects;
+            if (YearsOfUsage == 0)
+                Discount = 0.0;
+
+            if (Discount != 0)
+            {
+                var percent = Discount / 100;
+                MonthlyPayment = CurrentTariff.PricePerMonth * percent;
+            }
+            else
+                MonthlyPayment = CurrentTariff.PricePerMonth;
+            
+            _customerIdentifier = ++AmountOfObjects;
+        }
+        
+        public override void DisplayInfo()
+        {
+            Console.WriteLine("Info about individual customer:");
+            Console.WriteLine($"ID: {_customerIdentifier}, Name: {Name}, DoB: {_dateOfBirth};");
+            Console.WriteLine($"Address: {Address};");
+            Console.WriteLine($"Contacts: {Contacts};");
+            CurrentTariff.DisplayInfo();
+            Console.WriteLine($"Years of usage: {YearsOfUsage}, discount: {Discount};");
+            Console.WriteLine($"Total monthly payment: {MonthlyPayment}");
         }
 
-        protected override void CalcDiscount()
+        private void CalculateDiscount(Customer client)
         {
-            if (YearsOfUsage < 3)
-                Discount = 0;
-            else if (YearsOfUsage < 5)
-                Discount = 5;
-            else if (YearsOfUsage < 8)
-                Discount = 10;
-            else if (YearsOfUsage < 12)
-                Discount = 15;
-            else
-                Discount = 20;
+            
         }
     }
 }
