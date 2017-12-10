@@ -45,17 +45,6 @@ namespace informationSystem
             Console.WriteLine(new string('=', 80));
         }
 
-        public override void SetDiscount(double discount)
-        {
-            if (discount < 0 || discount > 100)
-                throw new ArgumentOutOfRangeException();
-            
-            Discount = discount;
-            MonthlyPayment = Math.Abs(Discount) < 0
-                ? Tariff.PricePerMonth
-                : Tariff.PricePerMonth * (discount / 100);
-        }
-
         private static char[] GetFirstLettersOfName(string name)
         {
             if (string.IsNullOrEmpty(name))
