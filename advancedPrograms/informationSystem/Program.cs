@@ -9,12 +9,13 @@ namespace informationSystem
             try
             {
                 var provider = new Operator("Qwertynet");
-                provider.AddCustomer();
-
+                
+                for (var i = 0; i < 3; ++i)
+                    provider.AddCustomer();
                 foreach (var client in provider.Customers)
-                {
                     client.DisplayInfo();
-                }
+
+                Console.WriteLine($"Total payments of this month: ${provider.CalculateSummaryPayments()}");
                 
                 Console.WriteLine("Program has been completed.");
             }
