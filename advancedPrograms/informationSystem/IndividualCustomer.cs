@@ -2,79 +2,70 @@
 
 namespace informationSystem
 {
-    internal sealed class IndividualCustomer : Customer, IAutoCounter
+    internal sealed class IndividualCustomer : Customer
     {
         // Fields:
-        
-        public static int AmountOfObjects { get; private set; }
 
-        private readonly int _customerIdentifier;
+        private const int RegionNumber = 70;
+
+        private static int _amountOfObjects;
+        private readonly string _customerIdentifier;
+        private readonly string _name;
         private readonly string _dateOfBirth;
         
-        // Properties:
-
-        public override string Name { get; }
-        public override string Address { get; }
-        public override string Contacts { get; }
-        public override Tariff CurrentTariff { get; }
-        public override int YearsOfUsage { get; }
-        protected override double Discount { get; set; }
-        public override double MonthlyPayment { get; }
-
         // Constructors:
 
         static IndividualCustomer()
         {
-            AmountOfObjects = 0;
+            _amountOfObjects = 0;
         }
         
         public IndividualCustomer(
-            string name, string dob, string address,
-            string contacts, Tariff tariff, int you = 0)
+            string name, string dateOfBirth, string address, Tariff tariff, int yearsOfUsage = 0)
+            : base (address, yearsOfUsage, tariff)
         {
-            if (string.IsNullOrEmpty(name)
-                || string.IsNullOrEmpty(dob)
-                || string.IsNullOrEmpty(address)
-                || string.IsNullOrEmpty(contacts))
-                throw new ArgumentNullException("ArgNullException in IndividualCustomer's constructor.");
-            if (you < 0)
-                throw new ArgumentOutOfRangeException();
-
-            Name = name;
-            _dateOfBirth = dob;
-            Address = address;
-            Contacts = contacts;
-            CurrentTariff = tariff;
-            YearsOfUsage = you;
-
-            if (YearsOfUsage == 0)
-                Discount = 0.0;
-
-            if (Discount != 0)
-            {
-                var percent = Discount / 100;
-                MonthlyPayment = CurrentTariff.PricePerMonth * percent;
-            }
-            else
-                MonthlyPayment = CurrentTariff.PricePerMonth;
+            _name = name;
+            _dateOfBirth = dateOfBirth;
             
-            _customerIdentifier = ++AmountOfObjects;
+            ++_amountOfObjects;
+
+            var letters = GetFirstLettersOfName(name);
+            var uniqueID = _amountOfObjects.ToString().PadLeft(8, '0');
+
+            _customerIdentifier = string.Concat(RegionNumber, letters[0], letters[1], uniqueID);
         }
         
         public override void DisplayInfo()
         {
-            Console.WriteLine("Info about individual customer:");
-            Console.WriteLine($"ID: {_customerIdentifier}, Name: {Name}, DoB: {_dateOfBirth};");
-            Console.WriteLine($"Address: {Address};");
-            Console.WriteLine($"Contacts: {Contacts};");
-            CurrentTariff.DisplayInfo();
-            Console.WriteLine($"Years of usage: {YearsOfUsage}, discount: {Discount};");
-            Console.WriteLine($"Total monthly payment: {MonthlyPayment}");
+            Console.WriteLine(new string('=', 80));
+            Console.WriteLine("Information about individual customer:");
+            Console.WriteLine($"Identificator: {_customerIdentifier}.");
+            Console.WriteLine($"Name: {_name}; Birth date: {_dateOfBirth}.");
+            base.DisplayInfo();
+            Console.WriteLine(new string('=', 80));
         }
 
-        private void CalculateDiscount(Customer client)
+        public override void SetDiscount(double discount)
         {
+            if (discount < 0 || discount > 100)
+                throw new ArgumentOutOfRangeException();
             
+            Discount = discount;
+            MonthlyPayment = Math.Abs(Discount) < 0
+                ? Tariff.PricePerMonth
+                : Tariff.PricePerMonth * (discount / 100);
+        }
+
+        private static char[] GetFirstLettersOfName(string name)
+        {
+            if (string.IsNullOrEmpty(name))
+                throw new ArgumentNullException(nameof(name));
+            
+            var splitted = name.Split();
+            if (splitted.Length < 2)
+                throw new Exception();
+
+            return new[] {splitted[0][0], splitted[1][0]};
         }
     }
 }
