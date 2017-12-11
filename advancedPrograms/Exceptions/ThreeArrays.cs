@@ -1,7 +1,4 @@
-﻿// This file implements FIRST TASK.
-// FIRST TASK: Three different arrays. 
-
-using System;
+﻿using System;
 using System.Data;
 
 namespace Exceptions
