@@ -30,7 +30,8 @@ namespace Exceptions
         {
             _programs = new List<Program>
             {
-                new ThreeArrays()
+                new ThreeArrays(),
+                new Notations()
             };
         }
 
