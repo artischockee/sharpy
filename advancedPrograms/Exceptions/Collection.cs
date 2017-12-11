@@ -31,7 +31,8 @@ namespace Exceptions
             _programs = new List<Program>
             {
                 new ThreeArrays(),
-                new Notations()
+                new Notations(),
+                new Transportation()
             };
         }
 
