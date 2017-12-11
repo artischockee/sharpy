@@ -74,6 +74,8 @@ namespace Exceptions
     
     internal static class Translator
     {
+        private const int BasicNotationScale = 10;
+        
         private static int Parse(char number)
         {
             int result;
@@ -85,7 +87,11 @@ namespace Exceptions
         
         private static int GetDecimal(string number, int notation)
         {
-            // Where's the exceptions, Lebowski?
+            if (string.IsNullOrEmpty(number))
+                throw new ArgumentNullException(nameof(number));
+            
+            if (notation == BasicNotationScale)
+                return int.Parse(number);
 
             var decNumber = 0;
 
