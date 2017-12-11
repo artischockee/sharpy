@@ -8,6 +8,7 @@ namespace Exceptions
         {
             try
             {
+                Console.WriteLine("(9th lab) Exceptions." + '\n');
                 var collection = new Collection();
                 collection.Display();
             
