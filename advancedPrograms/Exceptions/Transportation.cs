@@ -36,6 +36,12 @@ namespace Exceptions
                 ServicePrice = servicePrice;
             }
         }
+
+        public void DisplayInfo()
+        {
+            Console.WriteLine($"{Name}:");
+            Console.WriteLine($"Time: {Time}; Price: {ServicePrice}");
+        }
     }
 
     internal class ShipmentService
@@ -60,8 +66,7 @@ namespace Exceptions
             foreach (var vehicle in _vehiclesList)
             {
                 Console.WriteLine(new string('-', 64));
-                Console.WriteLine($"{vehicle.Name}:");
-                Console.WriteLine($"Time: {vehicle.Time}; Price: {vehicle.ServicePrice}");
+                vehicle.DisplayInfo();
             }
             Console.WriteLine(new string('-', 64));
         }
