@@ -119,8 +119,6 @@ namespace Exceptions
             var initDecimal = GetDecimal(initNumber.Value, initNumber.Notation);
             var destDecimal = GetDecimal(destNumber.Value, destNumber.Notation);
             
-//            Console.WriteLine($"InitDecimal: {initDecimal}, DestDecimal: {destDecimal}");
-            
             return initDecimal == destDecimal;
         }
     }
@@ -155,9 +153,6 @@ namespace Exceptions
         {
             try
             {
-//                var result = Translator.IsCorrectTranslation(
-//                    new Number("6512", 7), new Number("1811", 11));
-                
                 var first = NewNumber();
                 var second = NewNumber();
                 var result = Translator.IsCorrectTranslation(first, second);
