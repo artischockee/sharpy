@@ -32,7 +32,9 @@ namespace Exceptions
             {
                 new ThreeArrays(),
                 new Notations(),
-                new Transportation()
+                new Transportation(),
+                new Functions(),
+                new VectorMain()
             };
         }
 
