@@ -34,7 +34,8 @@ namespace Exceptions
                 new Notations(),
                 new Transportation(),
                 new Functions(),
-                new VectorMain()
+                new VectorMain(),
+                new SortingMain()
             };
         }
 
