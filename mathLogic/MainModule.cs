@@ -2,6 +2,12 @@
 
 namespace mathLogic
 {
+    public interface IProgram
+    {
+        string Name { get; }
+        void Execute();
+    }
+    
     public static class MainModule
     {
         public static void Main()
