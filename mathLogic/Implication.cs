@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace mathLogic
 {
@@ -18,6 +19,14 @@ namespace mathLogic
 
             RegLine = regLine;
             Index = index;
+        }
+
+        public int ZeroesAmount
+        {
+            get
+            {
+                return RegLine.Count(digit => digit == 0);
+            }
         }
     }
     
@@ -45,24 +54,42 @@ namespace mathLogic
             }
         }
 
-//        public static bool IsImplicate(byte a, byte b)
-//        {
-//            return a == 0 || b == 1;
-//        }
-
-        private void Swap(int indexOne, int indexTwo)
+        public static bool IsImplicate(byte a, byte b)
         {
-            // write Exceptions here
-            
-//            var buffer = _formulasTable[indexOne];
-//            _formulasTable[indexOne] = _formulasTable[indexTwo];
-//            _formulasTable[indexTwo] = buffer;
+            return a == 0 || b == 1;
         }
-        
-        // Solves the sequence of formulas presented in formulasTable
-        public void PerformTask()
+
+        private string GetTableIndexes()
         {
-            
+            string result = null;
+
+            foreach (var regulation in _formulasTable)
+            {
+                result = result + regulation.Index + " ";
+            }
+
+            return result;
+        }
+
+        // Solves the sequence of formulas presented in formulasTable
+        public void PerformTask(StreamWriter outputFile)
+        {
+            _formulasTable.Sort((reg1, reg2) => reg2.ZeroesAmount.CompareTo(reg1.ZeroesAmount));
+
+            for (var i = 0; i < _tableLinesAmount; ++i)
+            {
+                for (var j = 0; j < _formulasTable.Count - 1; ++j)
+                {
+                    if (IsImplicate(_formulasTable[j].RegLine[i], _formulasTable[j + 1].RegLine[i]))
+                        continue;
+                    
+                    outputFile.WriteLine("-1");
+                    return;
+                }
+            }
+
+            var indexesInLine = GetTableIndexes();
+            outputFile.WriteLine(indexesInLine);
         }
 
         private void ConvertToTable(byte[,] matrix)
@@ -141,10 +168,8 @@ namespace mathLogic
                 using (var input = new StreamReader(inputFile))
                     implication.ImportParameters(input);
                     
-                implication.DisplayTable();
-
                 using (var output = new StreamWriter(outputFile, false))
-                    // ...
+                    implication.PerformTask(output);
                 
                 Console.WriteLine("Operations were successfully completed.");
             }
