@@ -4,24 +4,42 @@ using System.IO;
 
 namespace mathLogic
 {
+    internal struct Regulation
+    {
+        public byte[] RegLine { get; }
+        public int Index { get; }
+
+        public Regulation(byte[] regLine, int index)
+        {
+            if (regLine.Length == 0)
+                throw new ArgumentNullException(nameof(regLine));
+            if (index <= 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            RegLine = regLine;
+            Index = index;
+        }
+    }
+    
     internal class Implication
     {
         private const int ScaleOfNotation = 2;
         private const int VariablesAmount = 3;
         private readonly int _tableLinesAmount;
-        private List<byte[]> _formulasTable;
+        private List<Regulation> _formulasTable;
 
         public Implication()
         {
             _tableLinesAmount = (int) Math.Pow(ScaleOfNotation, VariablesAmount);
-            _formulasTable = new List<byte[]>();
+            _formulasTable = new List<Regulation>();
         }
 
         public void DisplayTable()
         {
             foreach (var formula in _formulasTable)
             {
-                foreach (var digit in formula)
+                Console.Write($"#{formula.Index}: ");
+                foreach (var digit in formula.RegLine)
                     Console.Write($"{digit} ");
                 Console.WriteLine();
             }
@@ -51,9 +69,9 @@ namespace mathLogic
         {
             for (var j = 0; j < matrix.GetLength(1); ++j)
             {
-                var column = new byte[_tableLinesAmount];
+                var column = new Regulation(new byte[_tableLinesAmount], j + 1);
                 for (var i = 0; i < matrix.GetLength(0); ++i)
-                    column[i] = matrix[i, j];
+                    column.RegLine[i] = matrix[i, j];
                 
                 _formulasTable.Add(column);
             }
