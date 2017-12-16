@@ -145,16 +145,12 @@ namespace mathLogic
         }
     }
     
-    public class MainImplication : Program
+    public class MainImplication : IProgram
     {
         private const string ProgramName = "Implication";
-
-        protected internal override void ShowName()
-        {
-            Console.WriteLine(ProgramName);
-        }
+        public string Name => ProgramName;
         
-        protected internal override void Execute()
+        public void Execute()
         {
             const string inputFile = "input";
             const string outputFile = "output";

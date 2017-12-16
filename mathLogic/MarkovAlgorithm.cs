@@ -102,16 +102,12 @@ namespace mathLogic
         }
     }
 
-    public class MainMarkovAlgorithm : Program
+    public class MainMarkovAlgorithm : IProgram
     {
         private const string ProgramName = "Markov Algorithm";
-
-        protected internal override void ShowName()
-        {
-            Console.WriteLine(ProgramName);
-        }
+        public string Name => ProgramName;
         
-        protected internal override void Execute()
+        public void Execute()
         {
             const string inputFile = "input";
             const string outputFile = "output";

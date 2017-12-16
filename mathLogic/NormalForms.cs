@@ -175,16 +175,12 @@ namespace mathLogic
         }
     }
 
-    public class MainNormalForms : Program
+    public class MainNormalForms : IProgram
     {
         private const string ProgramName = "Normal forms";
-
-        protected internal override void ShowName()
-        {
-            Console.WriteLine(ProgramName);
-        }
-
-        protected internal override void Execute()
+        public string Name => ProgramName;
+        
+        public void Execute()
         {
             var ttable = new TruthTable();
             const string inputFileName = "input";

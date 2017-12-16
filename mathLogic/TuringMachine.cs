@@ -176,16 +176,12 @@ namespace mathLogic
         } // public void ReadParameters(StreamReader inputFile)
     } // public class TuringMachine
 
-    public class MainTuringMachine : Program
+    public class MainTuringMachine : IProgram
     {
         private const string ProgramName = "Turing Machine";
-
-        protected internal override void ShowName()
-        {
-            Console.WriteLine(ProgramName);
-        }
+        public string Name => ProgramName;
         
-        protected internal override void Execute()
+        public void Execute()
         {
             const string inputFile = "input";
             const string outputFile = "output";
