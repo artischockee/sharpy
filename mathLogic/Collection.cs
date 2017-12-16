@@ -1,34 +1,20 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 
 namespace mathLogic
 {
-    public abstract class Program
-    {
-        protected internal virtual void ShowName()
-        {
-            Console.WriteLine("An empty field (virtual method of ClassesContainer class)");
-        }
-
-        protected internal virtual void Execute()
-        {
-            Console.WriteLine("Warning: Nothing to execute from ClassesContainer class");
-        }
-    }
-    
-    public class Collection : Program, IEnumerable<Program>
+    public class Collection
     {
         // Please, don't touch this constant.
         // The program feels itself pretty good with this very number (1).
         // Otherwise, see usages of this one - especially in Execute() method.
         private const int InitialIndexOfProgram = 1;
-        private readonly List<Program> _programs;
+        private readonly List<IProgram> _programs;
 
         // Add new instances here
         public Collection()
         {
-            _programs = new List<Program>
+            _programs = new List<IProgram>
             {
                 new MainNormalForms(),
                 new MainTuringMachine(),
@@ -41,10 +27,7 @@ namespace mathLogic
         {
             var index = InitialIndexOfProgram;
             foreach (var item in _programs)
-            {
-                Console.Write($"[{index++}] ");
-                item.ShowName();
-            }
+                Console.WriteLine($"[{index++}] {item.Name}");
         }
 
         public void Execute(int programIndex)
@@ -53,16 +36,6 @@ namespace mathLogic
                 throw new ArgumentOutOfRangeException(nameof(programIndex));
             
             _programs[--programIndex].Execute();
-        }
-
-        IEnumerator<Program> IEnumerable<Program>.GetEnumerator()
-        {
-            return _programs.GetEnumerator();
-        }
-        
-        public IEnumerator GetEnumerator()
-        {
-            return _programs.GetEnumerator();
         }
     }
 }
