@@ -35,7 +35,7 @@ namespace mathLogic
         private const int ScaleOfNotation = 2;
         private const int VariablesAmount = 3;
         private readonly int _tableLinesAmount;
-        private List<Regulation> _formulasTable;
+        private readonly List<Regulation> _formulasTable;
 
         public Implication()
         {
@@ -58,7 +58,7 @@ namespace mathLogic
         {
             return a == 0 || b == 1;
         }
-
+        
         private string GetTableIndexes()
         {
             string result = null;
@@ -75,9 +75,8 @@ namespace mathLogic
         public void PerformTask(StreamWriter outputFile)
         {
             _formulasTable.Sort((reg1, reg2) => reg2.ZeroesAmount.CompareTo(reg1.ZeroesAmount));
-
+            
             for (var i = 0; i < _tableLinesAmount; ++i)
-            {
                 for (var j = 0; j < _formulasTable.Count - 1; ++j)
                 {
                     if (IsImplicate(_formulasTable[j].RegLine[i], _formulasTable[j + 1].RegLine[i]))
@@ -86,7 +85,6 @@ namespace mathLogic
                     outputFile.WriteLine("-1");
                     return;
                 }
-            }
 
             var indexesInLine = GetTableIndexes();
             outputFile.WriteLine(indexesInLine);
@@ -167,7 +165,7 @@ namespace mathLogic
             {
                 using (var input = new StreamReader(inputFile))
                     implication.ImportParameters(input);
-                    
+                
                 using (var output = new StreamWriter(outputFile, false))
                     implication.PerformTask(output);
                 
