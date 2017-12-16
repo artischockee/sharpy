@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace mathLogic
@@ -8,19 +9,20 @@ namespace mathLogic
         private const int ScaleOfNotation = 2;
         private const int VariablesAmount = 3;
         private readonly int _tableLinesAmount;
-        private byte[,] _formulasTable;
+        private List<byte[]> _formulasTable;
 
         public Implication()
         {
             _tableLinesAmount = (int) Math.Pow(ScaleOfNotation, VariablesAmount);
+            _formulasTable = new List<byte[]>();
         }
 
         public void DisplayTable()
         {
-            for (var i = 0; i < _formulasTable.GetLength(0); i++)
+            foreach (var formula in _formulasTable)
             {
-                for (var j = 0; j < _formulasTable.GetLength(1); j++)
-                    Console.Write($"{_formulasTable[i, j]} ");
+                foreach (var digit in formula)
+                    Console.Write($"{digit} ");
                 Console.WriteLine();
             }
         }
@@ -45,14 +47,33 @@ namespace mathLogic
             
         }
 
-        // Parses the second half of a string, taking only regulations' digits
-        private void ParseIntoTable(string[] parsedString, int tableIndex)
+        private void ConvertToTable(byte[,] matrix)
+        {
+            for (var j = 0; j < matrix.GetLength(1); ++j)
+            {
+                var column = new byte[_tableLinesAmount];
+                for (var i = 0; i < matrix.GetLength(0); ++i)
+                    column[i] = matrix[i, j];
+                
+                _formulasTable.Add(column);
+            }
+        }
+
+        // Parses the second half of the lines, taking only regulations' digits
+        private void ParseIntoMatrix(List<string[]> parsedString, int formulasAmount)
         {
             if (string.IsNullOrEmpty(parsedString?.ToString()))
                 throw new Exception("One of the parsed regulation lines was empty.");
-            
-            for (int j = 0, k = VariablesAmount; j < _formulasTable.GetLength(1); ++j, ++k)
-                _formulasTable[tableIndex, j] = byte.Parse(parsedString[k]);
+            if (formulasAmount <= 0)
+                throw new ArgumentOutOfRangeException("Formulas amount cannot be lesser or equal to 0");
+
+            var regMatrix = new byte[_tableLinesAmount, formulasAmount];
+
+            for (var i = 0; i < parsedString.Count; ++i)
+                for (int j = VariablesAmount, k = 0; j < parsedString[i].Length; ++j, ++k)
+                    regMatrix[i, k] = byte.Parse(parsedString[i][j]);
+
+            ConvertToTable(regMatrix);
         }
 
         // Reads parameters and regulations from specified file
@@ -66,17 +87,18 @@ namespace mathLogic
                 throw new Exception("First line of input file was empty.");
 
             var formulasAmount = int.Parse(buffer);
-
-            _formulasTable = new byte[_tableLinesAmount, formulasAmount];
+            var inputLines = new List<string[]>();
 
             for (var i = 0; i < _tableLinesAmount; ++i)
             {
-                var regulation = inputFile.ReadLine()?.Split();
-                ParseIntoTable(regulation, i);
+                var line = inputFile.ReadLine()?.Split();
+                inputLines.Add(line);
             }
             
             if (!inputFile.EndOfStream)
                 throw new EndOfStreamException("Input file ending not found.");
+            
+            ParseIntoMatrix(inputLines, formulasAmount);
         }
     }
     
