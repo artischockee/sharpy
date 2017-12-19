@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 
@@ -64,17 +65,43 @@ namespace mathLogic
             string result = null;
 
             foreach (var regulation in _formulasTable)
-            {
                 result = result + regulation.Index + " ";
-            }
 
             return result;
+        }
+
+        // Checks if there are an equal formulas in the _formulasTable.
+        // This method only works correct when the _formulasTable
+        // already sorted (like in PerformTask method)
+        public bool IsEquivalentFormulas()
+        {
+            if (_formulasTable == null)
+                throw new NullReferenceException("Can\'t perform any actions in nullable _formulasTable");
+            if (_formulasTable.Count < 2)
+            {
+                Console.WriteLine($"There is/are {_formulasTable.Count} formula(s) in the _formulasTable" +
+                                  "So, \"IsEquivalentFormulas\" method returns false.");
+                return false;
+            }
+            
+            for (var i = 0; i < _formulasTable.Count - 1; ++i)
+            {
+                if (_formulasTable[i].ZeroesAmount != _formulasTable[i + 1].ZeroesAmount)
+                    continue;
+                if (_formulasTable[i].RegLine == _formulasTable[i + 1].RegLine)
+                    return true;
+            }
+
+            return false;
         }
 
         // Solves the sequence of formulas presented in formulasTable
         public void PerformTask(StreamWriter outputFile)
         {
             _formulasTable.Sort((reg1, reg2) => reg2.ZeroesAmount.CompareTo(reg1.ZeroesAmount));
+            
+            if (IsEquivalentFormulas())
+                throw new DataException("An equivalent formulas has been detected in the _formulasTable");
             
             for (var i = 0; i < _tableLinesAmount; ++i)
                 for (var j = 0; j < _formulasTable.Count - 1; ++j)
@@ -130,6 +157,7 @@ namespace mathLogic
                 throw new Exception("First line of input file was empty.");
 
             var formulasAmount = int.Parse(buffer);
+            // This variable collects all the lines from an input file:
             var inputLines = new List<string[]>();
 
             for (var i = 0; i < _tableLinesAmount; ++i)
