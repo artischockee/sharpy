@@ -19,7 +19,8 @@ namespace mathLogic
                 new MainNormalForms(),
                 new MainTuringMachine(),
                 new MainMarkovAlgorithm(),
-                new MainImplication()
+                new MainImplication(),
+                new MainTruthSets()
             };
         }
 
