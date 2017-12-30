@@ -88,7 +88,7 @@ namespace mathLogic
             {
                 if (_formulasTable[i].ZeroesAmount != _formulasTable[i + 1].ZeroesAmount)
                     continue;
-                if (_formulasTable[i].RegLine == _formulasTable[i + 1].RegLine)
+                if (_formulasTable[i].RegLine.SequenceEqual(_formulasTable[i + 1].RegLine))
                     return true;
             }
 
@@ -180,8 +180,8 @@ namespace mathLogic
         
         public void Execute()
         {
-            const string inputFile = "input";
-            const string outputFile = "output";
+            const string inputFile = "input-04";
+            const string outputFile = "output-04";
             
             var implication = new Implication();
             
